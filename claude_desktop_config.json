@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "sap-mcp-gateway": {
+      "command": "node",
+      "args": ["D:\\Projects\\MCP System\\dist\\index.js"],
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP·MCP Intelligence Gateway — Dashboard</title>
+  <meta name="description" content="Real-time SAP ERP data dashboard powered by Model Context Protocol">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="dot"></div>
+      SAP·MCP <span>Intelligence Gateway</span>
+    </div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-adapter">MockERPAdapter</div>
+    <div class="topbar-right">
+      <div class="topbar-time" id="clock"></div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <div class="nav-item active" data-page="dashboard"><span class="nav-icon">📊</span>Dashboard</div>
+      <div class="nav-item" data-page="query"><span class="nav-icon">🔍</span>Query SAP</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Modules</div>
+      <div class="nav-item" data-page="purchase-orders"><span class="nav-icon">📦</span>Purchase Orders</div>
+      <div class="nav-item" data-page="inventory"><span class="nav-icon">🏭</span>Inventory</div>
+      <div class="nav-item" data-page="vendors"><span class="nav-icon">🤝</span>Vendors</div>
+      <div class="nav-item" data-page="sales-orders"><span class="nav-icon">💰</span>Sales Orders</div>
+      <div class="nav-item" data-page="open-items"><span class="nav-icon">📑</span>Open Items (FI)</div>
+      <div class="nav-item" data-page="work-orders"><span class="nav-icon">🔧</span>Work Orders</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workflow</div>
+      <div class="nav-item" data-page="approvals"><span class="nav-icon">✅</span>Pending Approvals<span class="nav-badge" id="approvalBadge">0</span></div>
+    </div>
+    <div class="sidebar-section" style="margin-top:auto">
+      <div class="sidebar-label">System</div>
+      <div class="nav-item" data-page="audit"><span class="nav-icon">📋</span>Audit Log</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main" id="mainContent">
+    <div class="loading"><div class="spinner"></div>Loading dashboard...</div>
+  </div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

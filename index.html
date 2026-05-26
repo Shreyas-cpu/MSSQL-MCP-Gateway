@@ -1,0 +1,3015 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SAP·MCP Intelligence Gateway — Project Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;0,900;1,300&family=IBM+Plex+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<style>
+/* ═══════════════════════════════════════════════════════
+   THEME VARIABLES
+═══════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  --bg:           #FAF6EF;
+  --bg2:          #F3EDE2;
+  --bg3:          #EBE3D5;
+  --bg4:          #E2D8C6;
+  --border:       rgba(120,80,30,0.12);
+  --border-hi:    rgba(220,90,20,0.35);
+  --orange:       #D95F0A;
+  --orange2:      #F07320;
+  --orange-dim:   rgba(217,95,10,0.1);
+  --orange-dim2:  rgba(217,95,10,0.06);
+  --text:         #1A0E05;
+  --text-muted:   #6B4E30;
+  --text-dim:     #A8886A;
+  --green:        #1C7A3E;
+  --green-dim:    rgba(28,122,62,0.1);
+  --red:          #B83030;
+  --red-dim:      rgba(184,48,48,0.1);
+  --blue:         #1A5EA8;
+  --blue-dim:     rgba(26,94,168,0.1);
+  --shadow:       0 2px 16px rgba(120,60,10,0.1);
+  --shadow-lg:    0 8px 40px rgba(120,60,10,0.15);
+  --nav-bg:       rgba(250,246,239,0.9);
+  --grid-color:   rgba(120,80,30,0.07);
+  --glow:         rgba(217,95,10,0.08);
+}
+
+[data-theme="dark"] {
+  --bg:           #0D0906;
+  --bg2:          #17100A;
+  --bg3:          #201508;
+  --bg4:          #2A1C0D;
+  --border:       rgba(255,180,80,0.08);
+  --border-hi:    rgba(255,120,40,0.3);
+  --orange:       #FF7230;
+  --orange2:      #FFA060;
+  --orange-dim:   rgba(255,114,48,0.12);
+  --orange-dim2:  rgba(255,114,48,0.06);
+  --text:         #F5ECD8;
+  --text-muted:   #A88060;
+  --text-dim:     #5A3E28;
+  --green:        #30C070;
+  --green-dim:    rgba(48,192,112,0.1);
+  --red:          #FF5050;
+  --red-dim:      rgba(255,80,80,0.1);
+  --blue:         #50A0FF;
+  --blue-dim:     rgba(80,160,255,0.1);
+  --shadow:       0 2px 16px rgba(0,0,0,0.4);
+  --shadow-lg:    0 8px 40px rgba(0,0,0,0.5);
+  --nav-bg:       rgba(13,9,6,0.92);
+  --grid-color:   rgba(255,180,80,0.04);
+  --glow:         rgba(255,114,48,0.06);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: background 0.35s, color 0.35s;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85em;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--orange);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOP NAVBAR
+═══════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 999;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 0;
+  transition: background 0.35s;
+}
+.topbar-logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--orange);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+.topbar-logo span { color: var(--text-dim); font-weight: 300; font-size: 12px; margin-left: 4px; }
+
+.timer-widget {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border-hi);
+  border-radius: 8px;
+  padding: 5px 12px;
+  margin-right: auto;
+  flex-shrink: 0;
+}
+.timer-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.timer-display {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--orange);
+  letter-spacing: 0.05em;
+}
+.timer-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.theme-toggle {
+  width: 44px; height: 24px;
+  background: var(--bg3);
+  border: 1px solid var(--border-hi);
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+.theme-toggle::before {
+  content: '☀️';
+  position: absolute;
+  left: 3px; top: 2px;
+  font-size: 16px;
+  line-height: 1;
+  transition: all 0.3s;
+}
+[data-theme="dark"] .theme-toggle::before {
+  content: '🌙';
+  left: calc(100% - 22px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAGE TABS
+═══════════════════════════════════════════════════════ */
+.page-tabs {
+  position: fixed;
+  top: 56px; left: 0; right: 0;
+  z-index: 998;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: stretch;
+  padding: 0 24px;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  transition: background 0.35s;
+}
+.page-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px 18px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab-btn:hover { color: var(--text-muted); }
+.tab-btn.active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+  background: var(--orange-dim2);
+}
+.tab-btn .tab-num {
+  font-size: 9px;
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAGES
+═══════════════════════════════════════════════════════ */
+.main-wrap {
+  padding-top: 96px;
+  position: relative;
+  z-index: 1;
+}
+
+.page {
+  display: none;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 32px 120px;
+  animation: pageIn 0.3s ease;
+}
+.page.active { display: block; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION COMPONENTS
+═══════════════════════════════════════════════════════ */
+.sec { margin-bottom: 72px; }
+
+.sec-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sec-eyebrow::after {
+  content: '';
+  flex: 1;
+  max-width: 40px;
+  height: 1px;
+  background: var(--orange);
+  opacity: 0.4;
+}
+
+.sec-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(26px, 3.5vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.15;
+}
+
+.sec-desc {
+  color: var(--text-muted);
+  max-width: 720px;
+  margin-bottom: 36px;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+  margin: 0 0 72px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARD SYSTEM
+═══════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover { border-color: var(--border-hi); box-shadow: var(--shadow-lg); }
+.card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+  opacity: 0.6;
+}
+
+.card-orange { border-color: rgba(217,95,10,0.25); background: linear-gradient(135deg, var(--orange-dim), var(--bg2)); }
+.card-green  { border-color: rgba(28,122,62,0.25); background: linear-gradient(135deg, var(--green-dim), var(--bg2)); }
+.card-blue   { border-color: rgba(26,94,168,0.25); background: linear-gradient(135deg, var(--blue-dim), var(--bg2)); }
+.card-red    { border-color: rgba(184,48,48,0.25); background: linear-gradient(135deg, var(--red-dim), var(--bg2)); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+@media(max-width:900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media(max-width:640px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════════════════
+   HERO (PAGE 1)
+═══════════════════════════════════════════════════════ */
+.hero {
+  padding: 20px 0 64px;
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--orange);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 36px; height: 2px;
+  background: var(--orange);
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(48px, 7vw, 84px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.hero-title .t1 { color: var(--text); display: block; }
+.hero-title .t2 {
+  display: block;
+  color: var(--orange);
+}
+.hero-title .t3 {
+  display: block;
+  color: var(--text-dim);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.6em;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 620px;
+  margin: 24px 0 40px;
+  line-height: 1.85;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.hbadge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid;
+  background: var(--bg3);
+}
+.hbadge.a { color: var(--orange); border-color: var(--border-hi); }
+.hbadge.b { color: var(--text-muted); border-color: var(--border); }
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media(max-width:640px) { .hero-stats { grid-template-columns: 1fr 1fr; } }
+
+.stat-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 18px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.stat-box:hover { border-color: var(--border-hi); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--orange);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.08em;
+}
+
+/* Hero glow */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 10%; right: -5%;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, var(--glow) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROBLEM CARDS
+═══════════════════════════════════════════════════════ */
+.prob-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--orange);
+  border-radius: 10px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.prob-card.blue { border-left-color: var(--blue); }
+.prob-card.green { border-left-color: var(--green); }
+.prob-card.red { border-left-color: var(--red); }
+.prob-card .picon { font-size: 22px; margin-bottom: 10px; }
+.prob-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 7px;
+}
+.prob-card p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════════════════
+   MCP EXPLAINER PILL ROW
+═══════════════════════════════════════════════════════ */
+.mcp-pills {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.mcp-pill {
+  flex: 1;
+  padding: 20px 18px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.mcp-pill:last-child { border-right: none; }
+.mcp-pill:hover { background: var(--bg3); }
+.mcp-pill .pill-icon { font-size: 24px; margin-bottom: 8px; }
+.mcp-pill .pill-name {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--orange); margin-bottom: 5px;
+}
+.mcp-pill .pill-sub { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+@media(max-width:640px) { .mcp-pills { flex-direction: column; } .mcp-pill { border-right: none; border-bottom: 1px solid var(--border); } }
+
+/* ═══════════════════════════════════════════════════════
+   SAP MODULE CARDS (PAGE 2)
+═══════════════════════════════════════════════════════ */
+.sap-module {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.sap-module:hover { box-shadow: var(--shadow-lg); border-color: var(--border-hi); }
+
+.sap-mod-head {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.sap-mod-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.sap-mod-icon.mm { background: var(--orange-dim); }
+.sap-mod-icon.sd { background: var(--blue-dim); }
+.sap-mod-icon.fi { background: var(--green-dim); }
+.sap-mod-icon.co { background: var(--red-dim); }
+.sap-mod-icon.pm { background: rgba(100,60,200,0.1); }
+.sap-mod-icon.wm { background: rgba(0,150,200,0.1); }
+.sap-mod-icon.hr { background: rgba(200,100,0,0.1); }
+.sap-mod-icon.pp { background: rgba(0,180,120,0.1); }
+
+.sap-mod-name {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text);
+}
+.sap-mod-code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--orange);
+  background: var(--orange-dim);
+  border: 1px solid var(--border-hi);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+.sap-mod-body { padding: 14px 20px; }
+.sap-mod-body p { font-size: 12px; color: var(--text-muted); line-height: 1.65; margin-bottom: 10px; }
+.sap-tools-list { display: flex; flex-direction: column; gap: 4px; }
+.sap-tool-item {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--orange2);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px 9px;
+}
+
+/* SAP Integration Methods */
+.int-method {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.int-method h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.int-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; padding: 2px 7px;
+  border-radius: 4px; letter-spacing: 0.1em;
+}
+.int-badge.rec { background: var(--green-dim); color: var(--green); border: 1px solid rgba(28,122,62,0.25); }
+.int-badge.alt { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(26,94,168,0.25); }
+.int-badge.leg { background: var(--bg3); color: var(--text-dim); border: 1px solid var(--border); }
+
+.int-method p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+.int-method ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.int-method ul li {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+}
+.int-method ul li::before {
+  content: '→';
+  color: var(--orange); font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; flex-shrink: 0; padding-top: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ARCHITECTURE (PAGE 3)
+═══════════════════════════════════════════════════════ */
+.arch-container {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+.arch-container::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.arch-layer {
+  margin-bottom: 6px;
+}
+.arch-layer-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  padding-left: 4px;
+}
+.arch-layer-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.arch-node {
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid;
+  text-align: center;
+  min-width: 110px;
+  flex: 1;
+  transition: all 0.2s;
+}
+.arch-node:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.arch-node .an-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px; letter-spacing: 0.12em;
+  text-transform: uppercase; opacity: 0.6;
+  margin-bottom: 4px;
+}
+.arch-node .an-name {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-weight: 700; line-height: 1.2;
+}
+.arch-node .an-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; opacity: 0.6;
+  margin-top: 3px; line-height: 1.3;
+}
+
+.an-ai    { background: var(--blue-dim);   border-color: rgba(26,94,168,0.4);  color: var(--blue);   }
+.an-mcp   { background: var(--orange-dim); border-color: rgba(217,95,10,0.4);  color: var(--orange); }
+.an-srv   { background: var(--orange-dim2);border-color: rgba(217,95,10,0.25); color: var(--orange2);}
+.an-adp   { background: var(--green-dim);  border-color: rgba(28,122,62,0.4);  color: var(--green);  }
+.an-sap   { background: var(--bg3);        border-color: var(--border-hi);     color: var(--text-muted); }
+
+.arch-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  gap: 8px;
+}
+.conn-line {
+  flex: 1;
+  max-width: 200px;
+  height: 2px;
+  position: relative;
+}
+.conn-line::after {
+  content: '▼';
+  position: absolute;
+  bottom: -12px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+}
+.conn-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 12px;
+}
+
+.conn-blue  { background: var(--blue); }  .conn-blue + .conn-label, .conn-blue::after  { color: var(--blue);  }
+.conn-org   { background: var(--orange); } .conn-org + .conn-label, .conn-org::after   { color: var(--orange);}
+.conn-green { background: var(--green); } .conn-green + .conn-label, .conn-green::after{ color: var(--green); }
+
+/* Component breakdown */
+.comp-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.comp-row:last-child { border-bottom: none; }
+.comp-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--orange);
+  padding: 14px 16px;
+  border-right: 1px solid var(--border);
+  background: var(--bg3);
+}
+.comp-detail {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* Flow diagram SVG wrapper */
+.flow-diagram {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+/* Security layers */
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media(max-width:768px) { .security-grid { grid-template-columns: 1fr; } }
+.sec-layer-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.sec-layer-card .slc-icon { font-size: 20px; margin-bottom: 8px; }
+.sec-layer-card h5 {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 6px;
+}
+.sec-layer-card p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════════════════
+   CHECKLIST (PAGE 4)
+═══════════════════════════════════════════════════════ */
+.progress-banner {
+  background: var(--bg2);
+  border: 1px solid var(--border-hi);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 36px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.prog-nums {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.prog-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+.prog-stat .ps-num {
+  font-family: 'Fraunces', serif;
+  font-size: 32px; font-weight: 700;
+  color: var(--orange); line-height: 1;
+}
+.prog-stat .ps-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; color: var(--text-dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.prog-bar-wrap {
+  flex: 1;
+  min-width: 200px;
+}
+.prog-bar-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text-dim);
+  margin-bottom: 6px; letter-spacing: 0.1em;
+}
+.prog-bar-bg {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange2));
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  min-width: 0;
+}
+
+.phase-wrap { margin-bottom: 32px; }
+
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--orange);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  user-select: none;
+}
+.phase-hdr:hover { border-color: var(--border-hi); }
+.phase-hdr.p-blue  { border-left-color: var(--blue);  }
+.phase-hdr.p-green { border-left-color: var(--green); }
+.phase-hdr.p-red   { border-left-color: var(--red);   }
+.phase-hdr.p-muted { border-left-color: var(--text-dim); }
+
+.ph-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text-dim);
+  white-space: nowrap;
+}
+.ph-name {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); flex: 1;
+}
+.ph-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--text-muted);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 20px; white-space: nowrap;
+}
+.ph-days {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--orange);
+  white-space: nowrap;
+}
+
+.cl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 2px;
+}
+@media(max-width:640px) { .cl-grid { grid-template-columns: 1fr; } }
+
+.ci {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.ci:hover { border-color: var(--border-hi); background: var(--bg3); }
+.ci.done {
+  border-color: rgba(28,122,62,0.3);
+  background: var(--green-dim);
+}
+.ci.done .cb { background: var(--green); border-color: var(--green); }
+.ci.done .cb::after { opacity: 1; }
+.ci.done .ct { color: var(--text-dim); text-decoration: line-through; text-decoration-color: var(--green); }
+
+.cb {
+  width: 17px; height: 17px; min-width: 17px;
+  border: 1.5px solid var(--border-hi);
+  border-radius: 4px;
+  margin-top: 1px;
+  position: relative;
+  transition: all 0.2s;
+  background: var(--bg3);
+}
+.cb::after {
+  content: '✓';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: white;
+  opacity: 0; transition: opacity 0.2s;
+  font-weight: 700;
+}
+.ct { line-height: 1.5; }
+
+/* ═══════════════════════════════════════════════════════
+   DEMO FLOW (PAGE 5)
+═══════════════════════════════════════════════════════ */
+.demo-step-row {
+  display: flex;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+  transition: border-color 0.2s;
+  box-shadow: var(--shadow);
+}
+.demo-step-row:hover { border-color: var(--border-hi); }
+.ds-num {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--orange); opacity: 0.35;
+  min-width: 32px; line-height: 1.1;
+}
+.ds-body h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 5px;
+}
+.ds-body p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.ds-prompt {
+  margin-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid rgba(28,122,62,0.2);
+  border-radius: 7px;
+  padding: 10px 14px;
+  line-height: 1.5;
+}
+.ds-result {
+  margin-top: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--blue);
+  background: var(--blue-dim);
+  border: 1px solid rgba(26,94,168,0.2);
+  border-radius: 7px;
+  padding: 8px 12px;
+  line-height: 1.4;
+}
+
+/* Tools table */
+.ttable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ttable th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-dim);
+  text-align: left; padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.ttable td {
+  font-size: 13px; padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  transition: background 0.15s;
+}
+.ttable tr:last-child td { border-bottom: none; }
+.ttable tr:hover td { background: var(--bg3); }
+.tname { font-family: 'IBM Plex Mono', monospace; color: var(--orange); font-size: 12px; white-space: nowrap; }
+.tmod {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--orange-dim); color: var(--orange2);
+  border: 1px solid var(--border-hi);
+}
+
+/* Stack items */
+.stack-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.stack-item:hover { border-color: var(--border-hi); }
+.sdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sdot-o { background: var(--orange); }
+.sdot-g { background: var(--green); }
+.sdot-b { background: var(--blue); }
+.sdot-d { background: var(--text-dim); }
+.sname { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text); min-width: 190px; }
+.sdesc { font-size: 13px; color: var(--text-muted); }
+.sbadge {
+  margin-left: auto; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; padding: 3px 9px;
+  border-radius: 5px; white-space: nowrap; flex-shrink: 0;
+}
+.sb-core { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--border-hi); }
+.sb-demo { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(26,94,168,0.2); }
+.sb-prod { background: var(--bg3); color: var(--text-dim); border: 1px solid var(--border); }
+
+/* Scope */
+.scope-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 24px;
+  box-shadow: var(--shadow);
+}
+.scope-box h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 14px; font-weight: 700;
+  margin-bottom: 14px; display: flex;
+  align-items: center; gap: 8px;
+}
+.scope-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.scope-box ul li {
+  font-size: 13px; color: var(--text-muted);
+  display: flex; align-items: flex-start;
+  gap: 8px; line-height: 1.5;
+}
+.scope-box ul li::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  margin-top: 7px; flex-shrink: 0;
+}
+.scope-in ul li::before { background: var(--green); }
+.scope-out ul li::before { background: var(--text-dim); }
+
+/* ═══════════════════════════════════════════════════════
+   TIMELINE (PAGE 6)
+═══════════════════════════════════════════════════════ */
+.gantt-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.gantt-header {
+  display: grid;
+  grid-template-columns: 200px repeat(14, 1fr);
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.gantt-hcell {
+  padding: 8px 0;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  border-right: 1px solid var(--border);
+}
+.gantt-hcell:first-child { text-align: left; padding-left: 16px; border-right: 2px solid var(--border); }
+
+.gantt-row {
+  display: grid;
+  grid-template-columns: 200px repeat(14, 1fr);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.gantt-row:last-child { border-bottom: none; }
+.gantt-task {
+  padding: 11px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-right: 2px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.gantt-cell { height: 36px; border-right: 1px solid var(--border); }
+.gantt-bar {
+  height: 22px;
+  border-radius: 4px;
+  margin: 7px 2px;
+}
+.gb-orange { background: linear-gradient(90deg, var(--orange), var(--orange2)); }
+.gb-blue   { background: var(--blue); opacity: 0.7; }
+.gb-green  { background: var(--green); opacity: 0.8; }
+.gb-red    { background: var(--red); opacity: 0.7; }
+
+/* Milestone row */
+.milestone-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.milestone {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  box-shadow: var(--shadow); flex: 1; min-width: 180px;
+}
+.ms-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.ms-body h5 {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text);
+}
+.ms-body span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text-dim);
+}
+
+/* Value cards */
+.val-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 22px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.val-card:hover { border-color: var(--border-hi); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.val-card .vc-icon { font-size: 26px; margin-bottom: 12px; display: block; }
+.val-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.val-card p { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+.val-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--orange);
+  background: var(--orange-dim);
+  border: 1px solid var(--border-hi);
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+
+/* Next steps */
+.next-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s;
+}
+.next-item:hover { border-color: var(--border-hi); }
+.ni-num {
+  font-family: 'Fraunces', serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--orange); opacity: 0.4;
+  min-width: 24px; line-height: 1.2;
+}
+.ni-body h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.ni-body p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.ni-tag {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; padding: 3px 10px;
+  border-radius: 5px; white-space: nowrap; flex-shrink: 0;
+}
+.ni-now { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--border-hi); }
+.ni-later { background: var(--bg3); color: var(--text-dim); border: 1px solid var(--border); }
+
+/* ═══════════════════════════════════════════════════════
+   FADE-IN ANIMATION
+═══════════════════════════════════════════════════════ */
+.fi { opacity: 0; transform: translateY(16px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.fi.vis { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.05s; }
+.d2 { transition-delay: 0.1s; }
+.d3 { transition-delay: 0.15s; }
+.d4 { transition-delay: 0.2s; }
+
+@media print { .fi { opacity: 1; transform: none; } nav, .topbar, .page-tabs { position: static; } }
+
+/* ═══════════════════════════════════════════════════════
+   PARTICLE CANVAS
+═══════════════════════════════════════════════════════ */
+#particleCanvas {
+  position: fixed; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.5s;
+}
+[data-theme="light"] #particleCanvas { opacity: 0.35; }
+
+/* ═══════════════════════════════════════════════════════
+   AMBIENT GLOW ORBS
+═══════════════════════════════════════════════════════ */
+.ambient-orbs {
+  position: fixed; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.12;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+[data-theme="dark"] .ambient-orb { opacity: 0.08; }
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(217,95,10,0.4), transparent 70%);
+  top: -10%; right: -5%;
+  animation-duration: 25s;
+}
+.orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(26,94,168,0.3), transparent 70%);
+  bottom: 10%; left: -8%;
+  animation-duration: 30s;
+  animation-delay: -8s;
+}
+.orb-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(28,122,62,0.25), transparent 70%);
+  top: 40%; right: 20%;
+  animation-duration: 22s;
+  animation-delay: -14s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-20px, 30px) scale(0.95); }
+  75% { transform: translate(15px, 15px) scale(1.02); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   READING PROGRESS BAR
+═══════════════════════════════════════════════════════ */
+#readingProgress {
+  position: fixed; top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--orange2), var(--orange));
+  z-index: 10000;
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(217,95,10,0.5);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAB PROGRESS INDICATOR
+═══════════════════════════════════════════════════════ */
+.tab-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), var(--orange2));
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+}
+.page-tabs { position: fixed; /* already fixed, adding relative for child */ }
+
+/* ═══════════════════════════════════════════════════════
+   PAGE TRANSITIONS
+═══════════════════════════════════════════════════════ */
+.page {
+  display: none;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 32px 120px;
+}
+.page.active {
+  display: block;
+  animation: pageSlideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateX(30px) translateY(6px); }
+  to { opacity: 1; transform: translateX(0) translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLASSMORPHISM PANELS
+═══════════════════════════════════════════════════════ */
+.glass {
+  background: rgba(250,246,239,0.45) !important;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255,255,255,0.18) !important;
+}
+[data-theme="dark"] .glass {
+  background: rgba(23,16,10,0.55) !important;
+  border: 1px solid rgba(255,180,80,0.08) !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARD TILT HOVER EFFECT
+═══════════════════════════════════════════════════════ */
+.tilt-card {
+  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.2s;
+  will-change: transform;
+}
+.tilt-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATED DIVIDERS
+═══════════════════════════════════════════════════════ */
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+  margin: 0 0 72px;
+  position: relative;
+  overflow: hidden;
+}
+.divider-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  animation: shimmer 4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   TYPING ANIMATION
+═══════════════════════════════════════════════════════ */
+.typing-cursor::after {
+  content: '▋';
+  color: var(--orange);
+  animation: blink 1s steps(1) infinite;
+  margin-left: 2px;
+  font-weight: 300;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   COUNTER ANIMATION
+═══════════════════════════════════════════════════════ */
+.count-up {
+  display: inline-block;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TERMINAL SIMULATOR
+═══════════════════════════════════════════════════════ */
+.terminal-wrap {
+  background: #0a0a0a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  margin-top: 32px;
+}
+.terminal-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.td-r { background: #ff5f57; }
+.td-y { background: #febc2e; }
+.td-g { background: #28c840; }
+.terminal-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: #888;
+  margin-left: 8px;
+}
+.terminal-body {
+  padding: 18px 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #c8c8c8;
+  min-height: 200px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.terminal-body .t-prompt {
+  color: #28c840;
+}
+.terminal-body .t-cmd {
+  color: #febc2e;
+}
+.terminal-body .t-result {
+  color: #50a0ff;
+}
+.terminal-body .t-info {
+  color: #888;
+}
+.terminal-body .t-orange {
+  color: #ff7230;
+}
+.terminal-controls {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  background: #111;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.term-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #1a1a1a;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.term-btn:hover { background: #2a2a2a; border-color: rgba(255,255,255,0.25); }
+.term-btn.active { background: #28c840; color: #000; border-color: #28c840; }
+.term-step-info {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: #666;
+  margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════════════════════ */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  animation: confettiFall 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   GANTT TODAY MARKER
+═══════════════════════════════════════════════════════ */
+.gantt-today {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: var(--red);
+  z-index: 5;
+  box-shadow: 0 0 6px rgba(255,50,50,0.5);
+}
+.gantt-today::before {
+  content: 'TODAY';
+  position: absolute;
+  top: -18px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--red);
+  white-space: nowrap;
+}
+.gantt-wrap { position: relative; }
+
+/* ═══════════════════════════════════════════════════════
+   PRESENTATION MODE
+═══════════════════════════════════════════════════════ */
+.pres-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 14px;
+  transition: all 0.2s;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+.pres-btn:hover { border-color: var(--border-hi); color: var(--orange); }
+
+body.presentation-mode .topbar { height: 40px; }
+body.presentation-mode .page-tabs { top: 40px; }
+body.presentation-mode .main-wrap { padding-top: 76px; }
+body.presentation-mode .page { padding-bottom: 40px; }
+
+.pres-dots {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 8px;
+  z-index: 9999;
+  padding: 6px 14px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+body.presentation-mode .pres-dots { display: flex; }
+.pres-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  opacity: 0.3;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.pres-dot.active { background: var(--orange); opacity: 1; transform: scale(1.3); }
+
+/* ═══════════════════════════════════════════════════════
+   FLOATING HERO DIAGRAM
+═══════════════════════════════════════════════════════ */
+.hero-float-diagram {
+  position: absolute;
+  right: 0; top: 60px;
+  width: 280px;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 1;
+}
+@media(max-width:900px) { .hero-float-diagram { display: none; } }
+.hfd-node {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  margin-bottom: 4px;
+  animation: hfdPulse 3s ease-in-out infinite;
+}
+.hfd-node:nth-child(2) { animation-delay: 0.5s; margin-left: 20px; }
+.hfd-node:nth-child(4) { animation-delay: 1s; margin-left: 40px; }
+.hfd-connector {
+  width: 2px; height: 14px;
+  margin-left: 32px;
+  animation: hfdPulse 3s ease-in-out infinite;
+}
+@keyframes hfdPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND LAYERS -->
+<canvas id="particleCanvas"></canvas>
+<div class="ambient-orbs">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+</div>
+<div id="readingProgress"></div>
+
+
+<!-- ══════════════════════════════════════════
+     TOP BAR
+══════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-logo">SAP·MCP <span>Intelligence Gateway</span></div>
+  <div class="timer-widget">
+    <div class="timer-dot"></div>
+    <div class="timer-label">BUILD TIME</div>
+    <div class="timer-display" id="timerDisplay">00:00:00:00</div>
+  </div>
+  <div class="theme-toggle" id="themeToggle" title="Toggle theme"></div>
+  <div class="pres-btn" id="presBtn" title="Presentation Mode">⛶</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE TABS
+══════════════════════════════════════════ -->
+<div class="page-tabs">
+  <button class="tab-btn active" onclick="switchPage('p1',this)"><span class="tab-num">01</span> Overview</button>
+  <button class="tab-btn" onclick="switchPage('p2',this)"><span class="tab-num">02</span> SAP + MCP</button>
+  <button class="tab-btn" onclick="switchPage('p3',this)"><span class="tab-num">03</span> Architecture</button>
+  <button class="tab-btn" onclick="switchPage('p4',this)"><span class="tab-num">04</span> Implementation</button>
+  <button class="tab-btn" onclick="switchPage('p5',this)"><span class="tab-num">05</span> Demo & Stack</button>
+  <button class="tab-btn" onclick="switchPage('p6',this)"><span class="tab-num">06</span> Timeline & Value</button>
+</div>
+
+<div class="main-wrap">
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — OVERVIEW
+══════════════════════════════════════════ -->
+<div class="page active" id="p1">
+
+  <section class="hero">
+    <!-- Floating architecture micro-diagram -->
+    <div class="hero-float-diagram" aria-hidden="true">
+      <div class="hfd-node" style="background:var(--blue-dim);border-color:rgba(26,94,168,0.4);color:var(--blue);">🤖 AI Host (Claude)</div>
+      <div class="hfd-connector" style="background:var(--blue);"></div>
+      <div class="hfd-node" style="background:var(--orange-dim);border-color:rgba(217,95,10,0.4);color:var(--orange);">⚙️ MCP Server</div>
+      <div class="hfd-connector" style="background:var(--green);"></div>
+      <div class="hfd-node" style="background:var(--green-dim);border-color:rgba(28,122,62,0.4);color:var(--green);">🏭 SAP ERP</div>
+    </div>
+    <div class="hero-eyebrow">Model Context Protocol · SAP Automation Initiative</div>
+    <h1 class="hero-title">
+      <span class="t1">SAP Intelligence</span>
+      <span class="t2">Gateway</span>
+      <span class="t3">via Model Context Protocol</span>
+    </h1>
+    <p class="hero-sub" id="heroSub">
+      A production-oriented MCP server that bridges AI language models directly into SAP workflows — enabling natural-language queries, multi-module data composition, approval automation, and intelligent reporting across SAP MM, SD, FI, CO, PM, and WM — without custom frontend development or vendor lock-in.
+    </p>
+    <div class="hero-badges">
+      <span class="hbadge a">MCP Protocol v1</span>
+      <span class="hbadge a">SAP ERP / S/4HANA</span>
+      <span class="hbadge b">Node.js · TypeScript</span>
+      <span class="hbadge b">RFC · OData · REST</span>
+      <span class="hbadge b">Prototype → Production</span>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box glass fi d1 tilt-card">
+        <div class="stat-num count-up" data-target="6" data-suffix="+">0</div>
+        <div class="stat-label">SAP MODULES</div>
+      </div>
+      <div class="stat-box glass fi d2 tilt-card">
+        <div class="stat-num count-up" data-target="12">0</div>
+        <div class="stat-label">MCP TOOLS</div>
+      </div>
+      <div class="stat-box glass fi d3 tilt-card">
+        <div class="stat-num count-up" data-target="14" data-suffix="d">0</div>
+        <div class="stat-label">TO PROTOTYPE</div>
+      </div>
+      <div class="stat-box glass fi d4 tilt-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">EXTENSIBILITY</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">01 — Context</div>
+    <h2 class="sec-title">The Problem with SAP + AI Today</h2>
+    <p class="sec-desc">SAP systems hold your most critical business intelligence — but accessing it requires trained operators, complex transactions, or expensive custom modules. AI models can change this, but only if given a structured, secure channel to SAP data.</p>
+    <div class="grid-2">
+      <div class="prob-card fi d1">
+        <div class="picon">🔒</div>
+        <h4>SAP Data Is Siloed</h4>
+        <p>Purchase orders, inventory levels, vendor master data, cost center reports — all trapped behind T-codes, role-based access, and complex UI flows. Non-SAP users have zero self-service path.</p>
+      </div>
+      <div class="prob-card blue fi d2">
+        <div class="picon">⏱️</div>
+        <h4>Every Query Needs an SAP Expert</h4>
+        <p>A manager wanting to check vendor status or pending approvals must either log into SAP themselves or raise a request to the SAP team — creating bottlenecks across every department.</p>
+      </div>
+      <div class="prob-card green fi d3">
+        <div class="picon">💸</div>
+        <h4>Custom AI Integration Is Expensive</h4>
+        <p>Each SAP module requires bespoke integration work. There's no standard AI interface. SAP's own Joule AI is licensed, complex, and locked to their ecosystem — not suitable for flexible AI workflows.</p>
+      </div>
+      <div class="prob-card red fi d4">
+        <div class="picon">🚀</div>
+        <h4>MCP Is the Universal SAP-AI Bridge</h4>
+        <p>Model Context Protocol provides one standardised interface. Build the MCP server once, and any MCP-compatible AI — Claude, GPT, Gemini, or a private model — can query and act on SAP data immediately.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">02 — Protocol Primer</div>
+    <h2 class="sec-title">What Is MCP?</h2>
+    <p class="sec-desc">Model Context Protocol is an open standard (Anthropic, 2024) that defines exactly how AI models connect to external systems. Think of it as USB-C for AI integrations — one interface, every device.</p>
+    <div class="mcp-pills fi">
+      <div class="mcp-pill">
+        <div class="pill-icon">🤖</div>
+        <div class="pill-name">MCP Host</div>
+        <div class="pill-sub">The AI app<br/>Claude Desktop · Cursor · Custom</div>
+      </div>
+      <div class="mcp-pill">
+        <div class="pill-icon">🔌</div>
+        <div class="pill-name">MCP Client</div>
+        <div class="pill-sub">Lives inside host<br/>Manages sessions + capabilities</div>
+      </div>
+      <div class="mcp-pill">
+        <div class="pill-icon">⚙️</div>
+        <div class="pill-name">MCP Server</div>
+        <div class="pill-sub">We build this<br/>Exposes Tools + Resources</div>
+      </div>
+      <div class="mcp-pill">
+        <div class="pill-icon">📡</div>
+        <div class="pill-name">Transport</div>
+        <div class="pill-sub">stdio (local)<br/>SSE / HTTP (remote)</div>
+      </div>
+      <div class="mcp-pill">
+        <div class="pill-icon">🏭</div>
+        <div class="pill-name">SAP Backend</div>
+        <div class="pill-sub">RFC · OData · REST<br/>The actual data source</div>
+      </div>
+    </div>
+    <div class="grid-2 fi" style="margin-top:16px;">
+      <div class="card card-orange">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:0.15em;margin-bottom:12px;">MCP PRIMITIVES</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:90px;">Tools</span><span style="font-size:13px;color:var(--text-muted);">Functions the AI can invoke — e.g. <code>get_purchase_orders()</code>, <code>approve_workflow_item()</code></span></div>
+          <div style="display:flex;gap:12px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:90px;">Resources</span><span style="font-size:13px;color:var(--text-muted);">Read-only data streams — live SAP reports, audit logs, config</span></div>
+          <div style="display:flex;gap:12px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:90px;">Prompts</span><span style="font-size:13px;color:var(--text-muted);">Reusable prompt templates pre-wired to SAP workflows</span></div>
+          <div style="display:flex;gap:12px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:90px;">Sampling</span><span style="font-size:13px;color:var(--text-muted);">Server can request AI completions for agentic multi-step ops</span></div>
+        </div>
+      </div>
+      <div class="card card-blue">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:0.15em;margin-bottom:12px;">WHY NOT ALTERNATIVES</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;"><span style="font-size:12px;color:var(--red);min-width:100px;font-family:'IBM Plex Mono',monospace;">SAP Joule</span><span style="font-size:13px;color:var(--text-muted);">Vendor lock-in, expensive licensing, limited to SAP's own AI layer</span></div>
+          <div style="display:flex;gap:12px;"><span style="font-size:12px;color:var(--red);min-width:100px;font-family:'IBM Plex Mono',monospace;">Custom APIs</span><span style="font-size:13px;color:var(--text-muted);">Per-model integration — duplicated work for every new AI tool adopted</span></div>
+          <div style="display:flex;gap:12px;"><span style="font-size:12px;color:var(--red);min-width:100px;font-family:'IBM Plex Mono',monospace;">LangChain Tools</span><span style="font-size:13px;color:var(--text-muted);">Python-only, no standard protocol, breaks across model upgrades</span></div>
+          <div style="display:flex;gap:12px;"><span style="font-size:12px;color:var(--green);min-width:100px;font-family:'IBM Plex Mono',monospace;">MCP ✓</span><span style="font-size:13px;color:var(--text-muted);">Open standard, model-agnostic, one server works for every AI client</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /p1 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — SAP + MCP
+══════════════════════════════════════════ -->
+<div class="page" id="p2">
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">01 — SAP Landscape</div>
+    <h2 class="sec-title">SAP Modules & MCP Tool Mapping</h2>
+    <p class="sec-desc">Each SAP module becomes a domain of MCP tools. The gateway exposes high-value operations from each module as typed, AI-callable functions — with the adapter layer handling the actual SAP communication protocol per module.</p>
+    <div class="grid-4">
+      <div class="sap-module fi d1">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon mm">📦</div>
+          <div>
+            <div class="sap-mod-name">Materials Mgmt</div>
+            <div style="font-size:11px;color:var(--text-dim);">Procurement · Inventory</div>
+          </div>
+          <span class="sap-mod-code">MM</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Covers purchasing, vendor master, goods receipt, and inventory management. Highest AI query volume.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_purchase_orders()</div>
+            <div class="sap-tool-item">query_inventory()</div>
+            <div class="sap-tool-item">get_vendor_details()</div>
+            <div class="sap-tool-item">get_goods_receipts()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d2">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon sd">🚚</div>
+          <div>
+            <div class="sap-mod-name">Sales & Distribution</div>
+            <div style="font-size:11px;color:var(--text-dim);">Orders · Delivery · Billing</div>
+          </div>
+          <span class="sap-mod-code">SD</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Customer orders, delivery schedules, billing documents and credit management across the order-to-cash process.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_sales_orders()</div>
+            <div class="sap-tool-item">check_delivery_status()</div>
+            <div class="sap-tool-item">get_customer_account()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d3">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon fi">💰</div>
+          <div>
+            <div class="sap-mod-name">Financial Accounting</div>
+            <div style="font-size:11px;color:var(--text-dim);">GL · AP · AR · Assets</div>
+          </div>
+          <span class="sap-mod-code">FI</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>General ledger postings, accounts payable/receivable, balance sheets, and fixed asset accounting.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_open_items()</div>
+            <div class="sap-tool-item">generate_balance_report()</div>
+            <div class="sap-tool-item">get_payment_status()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d4">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon co">📊</div>
+          <div>
+            <div class="sap-mod-name">Controlling</div>
+            <div style="font-size:11px;color:var(--text-dim);">Cost Centers · Profitability</div>
+          </div>
+          <span class="sap-mod-code">CO</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Cost center accounting, internal orders, product costing, and profit center reporting for management decisions.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_cost_center_report()</div>
+            <div class="sap-tool-item">query_budget_variance()</div>
+            <div class="sap-tool-item">get_profit_center_data()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d1">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon pm">🔧</div>
+          <div>
+            <div class="sap-mod-name">Plant Maintenance</div>
+            <div style="font-size:11px;color:var(--text-dim);">Equipment · Work Orders</div>
+          </div>
+          <span class="sap-mod-code">PM</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Maintenance planning, equipment master data, work order management, and breakdown notifications.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_work_orders()</div>
+            <div class="sap-tool-item">get_equipment_status()</div>
+            <div class="sap-tool-item">create_notification()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d2">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon wm">🏭</div>
+          <div>
+            <div class="sap-mod-name">Warehouse Mgmt</div>
+            <div style="font-size:11px;color:var(--text-dim);">Stock · Transfers · Bins</div>
+          </div>
+          <span class="sap-mod-code">WM</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Warehouse stock management, transfer orders, bin locations, and physical inventory counts.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_warehouse_stock()</div>
+            <div class="sap-tool-item">get_transfer_orders()</div>
+            <div class="sap-tool-item">query_bin_contents()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d3">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon pp">⚙️</div>
+          <div>
+            <div class="sap-mod-name">Production Planning</div>
+            <div style="font-size:11px;color:var(--text-dim);">MRP · Work Centers</div>
+          </div>
+          <span class="sap-mod-code">PP</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Material requirements planning, production orders, work center capacity, and BOM management.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_production_orders()</div>
+            <div class="sap-tool-item">run_mrp_check()</div>
+            <div class="sap-tool-item">get_bom_details()</div>
+          </div>
+        </div>
+      </div>
+      <div class="sap-module fi d4">
+        <div class="sap-mod-head">
+          <div class="sap-mod-icon hr">👥</div>
+          <div>
+            <div class="sap-mod-name">Workflow Engine</div>
+            <div style="font-size:11px;color:var(--text-dim);">Approvals · Releases</div>
+          </div>
+          <span class="sap-mod-code">WF</span>
+        </div>
+        <div class="sap-mod-body">
+          <p>Cross-module workflow approvals — release strategies, document approvals, and delegations across all SAP modules.</p>
+          <div class="sap-tools-list">
+            <div class="sap-tool-item">get_pending_approvals()</div>
+            <div class="sap-tool-item">approve_workflow_item()</div>
+            <div class="sap-tool-item">delegate_approval()</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">02 — SAP Integration Methods</div>
+    <h2 class="sec-title">How the Adapter Talks to SAP</h2>
+    <p class="sec-desc">The ERP Adapter layer supports multiple SAP communication protocols. Each method has different use cases, performance characteristics, and setup complexity. The prototype uses mock data; production uses the real adapters below.</p>
+    <div class="grid-2">
+      <div class="int-method fi d1">
+        <h4>SAP RFC / BAPI <span class="int-badge rec">RECOMMENDED</span></h4>
+        <p>Remote Function Call is SAP's native integration protocol. BAPI (Business API) functions are stable, documented RFC wrappers designed for external consumption. The <code>node-rfc</code> library provides Node.js bindings to SAP's NWRFC SDK.</p>
+        <ul>
+          <li>Direct access to any SAP function module</li>
+          <li>Best performance — native SAP protocol</li>
+          <li>Used for: MM, SD, FI, CO, PM, WM operations</li>
+          <li>Requires SAP NWRFC SDK + RFC credentials</li>
+          <li>Example: <code>BAPI_PO_GETDETAIL</code> for PO details</li>
+        </ul>
+      </div>
+      <div class="int-method fi d2">
+        <h4>SAP OData / REST API <span class="int-badge alt">MODERN</span></h4>
+        <p>SAP Gateway exposes business data as OData v2/v4 services over HTTP. S/4HANA provides extensive OData APIs out of the box. This is the recommended approach for cloud/hybrid SAP deployments.</p>
+        <ul>
+          <li>Standard HTTP — works with any HTTP client</li>
+          <li>Rich filtering, sorting, and $expand support</li>
+          <li>Used for: S/4HANA Cloud, newer deployments</li>
+          <li>Requires SAP Gateway activation and user auth</li>
+          <li>Example: <code>/sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV</code></li>
+        </ul>
+      </div>
+      <div class="int-method fi d3">
+        <h4>SAP IDocs / ALE <span class="int-badge leg">LEGACY</span></h4>
+        <p>Intermediate Documents for asynchronous message-based integration. Suitable for batch operations and system-to-system replication. Lower priority for real-time AI queries but useful for event-driven triggers.</p>
+        <ul>
+          <li>Asynchronous — not suited for real-time queries</li>
+          <li>Good for event triggers (new PO created → AI notified)</li>
+          <li>Existing infrastructure likely already in place</li>
+        </ul>
+      </div>
+      <div class="int-method fi d4">
+        <h4>Mock ERP Adapter <span class="int-badge rec">PROTOTYPE</span></h4>
+        <p>For the demonstration phase, the adapter runs against a realistic mock data layer with 50+ seeded SAP-style records. This proves the entire MCP communication pattern without requiring live SAP credentials.</p>
+        <ul>
+          <li>Zero SAP setup needed for demo</li>
+          <li>Same interface as live adapters — swap in production</li>
+          <li>Seeded with realistic MM, SD, FI, and WF data</li>
+          <li>Supports all filtering, status codes, and relations</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">03 — Real-World Use Cases</div>
+    <h2 class="sec-title">What Business Users Can Do with AI + SAP</h2>
+    <div class="grid-3">
+      <div class="card card-orange fi d1">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);margin-bottom:10px;letter-spacing:0.12em;">PROCUREMENT MANAGER</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">"Show all POs from last month over ₹5L that are still pending approval, with vendor names" — answered in seconds, no T-code navigation required.</p>
+      </div>
+      <div class="card card-blue fi d2">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);margin-bottom:10px;letter-spacing:0.12em;">FINANCE CONTROLLER</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">"What's the budget variance for cost center CC-1040 this quarter vs last year, and which line items are over budget?" — instant CO module deep-dive.</p>
+      </div>
+      <div class="card card-green fi d3">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--green);margin-bottom:10px;letter-spacing:0.12em;">WAREHOUSE SUPERVISOR</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">"Which materials in Plant 1010 are below reorder point? Pull their vendor details and open PO status" — cross-module MM + WM query in one request.</p>
+      </div>
+      <div class="card fi d1">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:10px;letter-spacing:0.12em;">PLANT MAINTENANCE</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">"List all open work orders for Equipment E-2200, sorted by overdue date. What parts are needed?" — PM module query with inventory cross-check.</p>
+      </div>
+      <div class="card fi d2">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:10px;letter-spacing:0.12em;">APPROVAL WORKFLOW</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">"I have 12 pending approvals. Summarise each, flag anything urgent, then let me approve the ones under ₹1L with a single confirm" — AI-orchestrated multi-step workflow.</p>
+      </div>
+      <div class="card fi d3">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:10px;letter-spacing:0.12em;">MANAGEMENT REPORTING</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">"Generate a one-page procurement spend summary for this week, highlight top 3 vendors by value, flag any new vendors" — auto-composed FI + MM report.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /p2 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — ARCHITECTURE
+══════════════════════════════════════════ -->
+<div class="page" id="p3">
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">01 — System Architecture</div>
+    <h2 class="sec-title">5-Layer Architecture Deep Dive</h2>
+    <p class="sec-desc">The system is structured as five cleanly decoupled layers. Each layer has a single responsibility and communicates with adjacent layers through defined interfaces — making each replaceable independently.</p>
+
+    <div class="arch-container glass fi">
+      <div class="arch-layer">
+        <div class="arch-layer-label">Layer 1 — AI / LLM Host</div>
+        <div class="arch-layer-row">
+          <div class="arch-node an-ai"><div class="an-label">Primary Host</div><div class="an-name">Claude Desktop</div><div class="an-sub">stdio transport</div></div>
+          <div class="arch-node an-ai"><div class="an-label">Dev / API</div><div class="an-name">Claude API Client</div><div class="an-sub">SSE transport</div></div>
+          <div class="arch-node an-ai"><div class="an-label">IDE Agent</div><div class="an-name">Cursor / Cline</div><div class="an-sub">stdio transport</div></div>
+          <div class="arch-node an-ai" style="opacity:0.5;"><div class="an-label">Future</div><div class="an-name">Custom Web App</div><div class="an-sub">HTTP / SSE</div></div>
+        </div>
+      </div>
+      <div class="arch-connector">
+        <div class="conn-line conn-blue" style="background:var(--blue);"></div>
+        <div class="conn-label" style="color:var(--blue);">JSON-RPC 2.0 · MCP Protocol · initialize → tools/list → tools/call</div>
+        <div class="conn-line conn-blue" style="background:var(--blue);"></div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Layer 2 — MCP Protocol + Auth Middleware</div>
+        <div class="arch-layer-row">
+          <div class="arch-node an-mcp"><div class="an-label">Core</div><div class="an-name">MCP Server</div><div class="an-sub">@modelcontextprotocol/sdk</div></div>
+          <div class="arch-node an-mcp"><div class="an-label">Security</div><div class="an-name">Auth Middleware</div><div class="an-sub">API Key · JWT · OAuth2</div></div>
+          <div class="arch-node an-mcp"><div class="an-label">Control</div><div class="an-name">Rate Limiter</div><div class="an-sub">Per-tool · Per-user</div></div>
+          <div class="arch-node an-mcp"><div class="an-label">Audit</div><div class="an-name">Audit Logger</div><div class="an-sub">Append-only · Tamper-proof</div></div>
+        </div>
+      </div>
+      <div class="arch-connector">
+        <div class="conn-line conn-org" style="background:var(--orange);"></div>
+        <div class="conn-label" style="color:var(--orange);">Internal TypeScript function calls · Validated inputs · Structured responses</div>
+        <div class="conn-line conn-org" style="background:var(--orange);"></div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Layer 3 — Tool Registry + Business Logic</div>
+        <div class="arch-layer-row">
+          <div class="arch-node an-srv"><div class="an-label">MM Tools</div><div class="an-name">Procurement</div><div class="an-sub">PO · Vendor · Inventory</div></div>
+          <div class="arch-node an-srv"><div class="an-label">SD Tools</div><div class="an-name">Sales</div><div class="an-sub">Orders · Delivery · Billing</div></div>
+          <div class="arch-node an-srv"><div class="an-label">FI/CO Tools</div><div class="an-name">Finance</div><div class="an-sub">GL · Reports · Budgets</div></div>
+          <div class="arch-node an-srv"><div class="an-label">WF Tools</div><div class="an-name">Workflow</div><div class="an-sub">Approvals · Delegation</div></div>
+          <div class="arch-node an-srv"><div class="an-label">PM/WM</div><div class="an-name">Operations</div><div class="an-sub">Maintenance · Warehouse</div></div>
+        </div>
+      </div>
+      <div class="arch-connector">
+        <div class="conn-line conn-green" style="background:var(--green);"></div>
+        <div class="conn-label" style="color:var(--green);">ERP Adapter Interface · Abstract methods · Protocol-agnostic</div>
+        <div class="conn-line conn-green" style="background:var(--green);"></div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Layer 4 — ERP Adapter Layer</div>
+        <div class="arch-layer-row">
+          <div class="arch-node an-adp"><div class="an-label">Demo</div><div class="an-name">Mock Adapter</div><div class="an-sub">Seeded JSON data</div></div>
+          <div class="arch-node an-adp"><div class="an-label">Native</div><div class="an-name">RFC Adapter</div><div class="an-sub">node-rfc · BAPI calls</div></div>
+          <div class="arch-node an-adp"><div class="an-label">Modern</div><div class="an-name">OData Adapter</div><div class="an-sub">S/4HANA · REST · HTTP</div></div>
+          <div class="arch-node an-adp" style="opacity:0.6;"><div class="an-label">Custom</div><div class="an-name">REST Adapter</div><div class="an-sub">Any ERP REST API</div></div>
+        </div>
+      </div>
+      <div class="arch-connector">
+        <div class="conn-line" style="background:var(--text-dim);height:2px;"></div>
+        <div class="conn-label">SAP Network · RFC Port 3300 · HTTPS / OData · Credentials vault</div>
+        <div class="conn-line" style="background:var(--text-dim);height:2px;"></div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Layer 5 — SAP ERP / S/4HANA System</div>
+        <div class="arch-layer-row">
+          <div class="arch-node an-sap"><div class="an-label">Module</div><div class="an-name">SAP MM</div><div class="an-sub">Materials Mgmt</div></div>
+          <div class="arch-node an-sap"><div class="an-label">Module</div><div class="an-name">SAP SD</div><div class="an-sub">Sales & Dist.</div></div>
+          <div class="arch-node an-sap"><div class="an-label">Module</div><div class="an-name">SAP FI/CO</div><div class="an-sub">Finance / Ctrl</div></div>
+          <div class="arch-node an-sap"><div class="an-label">Module</div><div class="an-name">SAP PM</div><div class="an-sub">Plant Maint.</div></div>
+          <div class="arch-node an-sap"><div class="an-label">Module</div><div class="an-name">SAP WM/WH</div><div class="an-sub">Warehouse</div></div>
+          <div class="arch-node an-sap"><div class="an-label">Engine</div><div class="an-name">SAP Workflow</div><div class="an-sub">Approvals · Releases</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">02 — Component Breakdown</div>
+    <h2 class="sec-title">Internal Server Components</h2>
+    <div class="card fi" style="padding:0;overflow:hidden;">
+      <div class="comp-row"><div class="comp-name">Server Entry Point</div><div class="comp-detail">Bootstraps transport (stdio/SSE), registers capabilities, initialises middleware chain. Handles the MCP <code>initialize</code> handshake and sends <code>serverInfo</code> with supported protocol version.</div></div>
+      <div class="comp-row"><div class="comp-name">Tool Registry</div><div class="comp-detail">Central manifest of all tools with their JSON Schema input definitions, descriptions, and handler references. The AI uses descriptions for tool selection — these must be precise and business-language-friendly. Adding a new tool is a single registry entry.</div></div>
+      <div class="comp-row"><div class="comp-name">Request Router</div><div class="comp-detail">Receives <code>tools/call</code> requests, validates input against the registered schema using Zod, resolves the handler function, executes, and formats the <code>CallToolResult</code> response with typed content blocks.</div></div>
+      <div class="comp-row"><div class="comp-name">Auth Middleware</div><div class="comp-detail">API key validation for local deployments; JWT/OAuth2 token verification for remote SSE deployments. Supports per-tool permission scopes — e.g. <code>approve_workflow_item</code> requires elevated <code>sap:write</code> scope.</div></div>
+      <div class="comp-row"><div class="comp-name">Rate Limiter</div><div class="comp-detail">Sliding window rate limiting per user and per tool. Prevents runaway AI agents from flooding SAP with requests. Configurable per environment — generous in dev, strict in production.</div></div>
+      <div class="comp-row"><div class="comp-name">Audit Logger</div><div class="comp-detail">Append-only structured log of every tool call: timestamp, user, tool name, input parameters (sanitised), response summary, and duration. Written to file and optionally streamed to a logging service. Critical for enterprise compliance.</div></div>
+      <div class="comp-row"><div class="comp-name">ERP Adapter Interface</div><div class="comp-detail">TypeScript abstract class defining all ERP operations. Both <code>MockERPAdapter</code> and <code>LiveRFCAdapter</code> implement this interface. Tool handlers call the adapter methods — they never know which adapter is active. Swap adapters via environment config.</div></div>
+      <div class="comp-row"><div class="comp-name">Response Formatter</div><div class="comp-detail">Converts raw ERP data structures to MCP <code>TextContent</code> or <code>JSONContent</code> blocks. Handles pagination, truncation, and error wrapping. Formats numbers, dates, and currency to be AI-readable and human-friendly.</div></div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">03 — Security Model</div>
+    <h2 class="sec-title">Security by Design</h2>
+    <p class="sec-desc">Every AI-triggered SAP action passes through multiple security layers before execution. No tool call reaches SAP without validation, authentication, and logging.</p>
+    <div class="security-grid fi">
+      <div class="sec-layer-card"><div class="slc-icon">🔑</div><h5>Authentication</h5><p>API key for local stdio. OAuth 2.0 client credentials flow for remote SSE. Separate service account per environment with minimal SAP authorisation profile.</p></div>
+      <div class="sec-layer-card"><div class="slc-icon">🛡️</div><h5>Input Validation</h5><p>Every tool input validated against Zod schema before touching any SAP adapter. Injection-safe — no raw string concatenation into SAP function parameters.</p></div>
+      <div class="sec-layer-card"><div class="slc-icon">🔒</div><h5>Permission Scopes</h5><p>Read-only tools vs write-action tools have separate permission scopes. Approval tools require explicit <code>sap:approve</code> scope. Principle of least privilege enforced per deployment.</p></div>
+      <div class="sec-layer-card"><div class="slc-icon">📋</div><h5>Audit Trail</h5><p>Immutable append-only log of every AI-triggered action with full parameter capture. Every SAP write action is confirmed before execution and logged after. Full reversal path documented.</p></div>
+      <div class="sec-layer-card"><div class="slc-icon">⚡</div><h5>Rate Limiting</h5><p>Per-user and per-tool rate limiting prevents runaway agentic loops from overloading SAP. Separate limits for read vs write operations. Circuit breaker pattern for SAP connection faults.</p></div>
+      <div class="sec-layer-card"><div class="slc-icon">🌐</div><h5>Network Isolation</h5><p>MCP server deployed on internal network — same segment as SAP. No SAP credentials ever leave the perimeter. External AI APIs only see the MCP protocol layer, never raw SAP data schemas.</p></div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">04 — Data Flow</div>
+    <h2 class="sec-title">Request Lifecycle — Step by Step</h2>
+    <p class="sec-desc">Tracing a single natural-language query from the user to SAP and back, showing every processing stage.</p>
+    <div class="flow-diagram fi">
+      <div style="display:flex;flex-direction:column;gap:0;min-width:600px;">
+        <div style="display:flex;align-items:center;gap:0;">
+          <div style="width:200px;padding:12px 16px;background:var(--blue-dim);border:1px solid rgba(26,94,168,0.3);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--blue);letter-spacing:0.1em;margin-bottom:4px;">USER</div>
+            <div style="font-size:12px;color:var(--text-muted);">"Show all open POs from last week"</div>
+          </div>
+          <div style="flex:1;height:2px;background:linear-gradient(90deg,var(--blue),var(--orange));margin:0 4px;position:relative;">
+            <div style="position:absolute;right:-6px;top:-8px;font-size:12px;color:var(--orange);">▶</div>
+          </div>
+          <div style="width:180px;padding:12px 16px;background:var(--orange-dim);border:1px solid var(--border-hi);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--orange);letter-spacing:0.1em;margin-bottom:4px;">LLM REASONING</div>
+            <div style="font-size:11px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;">Selects tool:<br/>get_purchase_orders</div>
+          </div>
+          <div style="flex:1;height:2px;background:linear-gradient(90deg,var(--orange),var(--orange));margin:0 4px;position:relative;">
+            <div style="position:absolute;right:-6px;top:-8px;font-size:12px;color:var(--orange);">▶</div>
+          </div>
+          <div style="width:160px;padding:12px 16px;background:var(--orange-dim2);border:1px solid var(--border);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--orange2);letter-spacing:0.1em;margin-bottom:4px;">JSON-RPC CALL</div>
+            <div style="font-size:10px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;">tools/call<br/>{status:"open", days:7}</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;padding-right:80px;margin:4px 0;">
+          <div style="width:2px;height:24px;background:var(--orange);"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0;flex-direction:row-reverse;">
+          <div style="width:160px;padding:12px 16px;background:var(--green-dim);border:1px solid rgba(28,122,62,0.3);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:4px;">SAP RESPONSE</div>
+            <div style="font-size:11px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;">BAPI return:<br/>7 PO records</div>
+          </div>
+          <div style="flex:1;height:2px;background:linear-gradient(90deg,var(--green),var(--orange));margin:0 4px;position:relative;">
+            <div style="position:absolute;left:-6px;top:-8px;font-size:12px;color:var(--green);">◀</div>
+          </div>
+          <div style="width:180px;padding:12px 16px;background:var(--green-dim);border:1px solid rgba(28,122,62,0.25);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:4px;">ADAPTER + AUDIT</div>
+            <div style="font-size:11px;color:var(--text-muted);">BAPI_PO_GETITEMS<br/>+ log call</div>
+          </div>
+          <div style="flex:1;height:2px;background:linear-gradient(90deg,var(--orange),var(--green));margin:0 4px;position:relative;">
+            <div style="position:absolute;left:-6px;top:-8px;font-size:12px;color:var(--orange);">◀</div>
+          </div>
+          <div style="width:200px;padding:12px 16px;background:var(--orange-dim2);border:1px solid var(--border);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--orange2);letter-spacing:0.1em;margin-bottom:4px;">TOOL HANDLER</div>
+            <div style="font-size:11px;color:var(--text-muted);">Validate → Route<br/>→ Adapter call</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-start;padding-left:100px;margin:4px 0;">
+          <div style="width:2px;height:24px;background:var(--green);"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0;justify-content:flex-start;">
+          <div style="width:200px;padding:12px 16px;background:var(--blue-dim);border:1px solid rgba(26,94,168,0.3);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--blue);letter-spacing:0.1em;margin-bottom:4px;">FORMATTED REPLY</div>
+            <div style="font-size:12px;color:var(--text-muted);">User sees structured<br/>PO table in chat</div>
+          </div>
+          <div style="width:120px;height:2px;background:linear-gradient(90deg,var(--green),var(--blue));margin:0 4px;position:relative;">
+            <div style="position:absolute;left:-6px;top:-8px;font-size:12px;color:var(--blue);">◀</div>
+          </div>
+          <div style="width:180px;padding:12px 16px;background:var(--green-dim);border:1px solid rgba(28,122,62,0.25);border-radius:8px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:4px;">RESPONSE FORMAT</div>
+            <div style="font-size:11px;color:var(--text-muted);">TextContent block<br/>returned to LLM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /p3 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — IMPLEMENTATION CHECKLIST
+══════════════════════════════════════════ -->
+<div class="page" id="p4">
+
+  <div class="progress-banner glass fi" id="progressBanner">
+    <div class="prog-nums">
+      <div class="prog-stat"><div class="ps-num" id="doneCount">0</div><div class="ps-label">DONE</div></div>
+      <div class="prog-stat"><div class="ps-num" id="totalCount">0</div><div class="ps-label">TOTAL</div></div>
+      <div class="prog-stat"><div class="ps-num" id="pctCount">0%</div><div class="ps-label">COMPLETE</div></div>
+    </div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-label">OVERALL PROGRESS · CLICK ANY ITEM TO MARK COMPLETE · AUTO-SAVED</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-wrap fi">
+    <div class="phase-hdr">
+      <div class="ph-num">PHASE 01</div>
+      <div class="ph-name">Environment & Project Foundation</div>
+      <div class="ph-days">Days 1â€"2</div>
+      <div class="ph-count" id="cnt_p1">0 / 6</div>
+    </div>
+    <div class="cl-grid">
+      <div class="ci" id="ci_p1_0" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Initialise Node.js project with TypeScript configuration and tsconfig</div></div>
+      <div class="ci" id="ci_p1_1" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Install <code>@modelcontextprotocol/sdk</code>, <code>zod</code>, and core dependencies</div></div>
+      <div class="ci" id="ci_p1_2" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Set up project structure: <code>src/tools/</code>, <code>src/adapters/</code>, <code>src/mock-data/</code>, <code>src/middleware/</code></div></div>
+      <div class="ci" id="ci_p1_3" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Configure stdio and SSE transport in server entry point</div></div>
+      <div class="ci" id="ci_p1_4" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Set up Git repository with branch strategy and commit conventions</div></div>
+      <div class="ci" id="ci_p1_5" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Write server startup + verify basic MCP capability handshake with <code>@modelcontextprotocol/inspector</code></div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-wrap fi">
+    <div class="phase-hdr p-blue">
+      <div class="ph-num">PHASE 02</div>
+      <div class="ph-name">Mock SAP Data Layer & Adapter Interface</div>
+      <div class="ph-days">Days 3â€"4</div>
+      <div class="ph-count" id="cnt_p2">0 / 8</div>
+    </div>
+    <div class="cl-grid">
+      <div class="ci" id="ci_p2_0" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Design TypeScript interfaces for SAP data types — PO, Vendor, Material, WorkOrder, CostCenter</div></div>
+      <div class="ci" id="ci_p2_1" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Build abstract <code>ERPAdapterInterface</code> class with method signatures for all SAP operations</div></div>
+      <div class="ci" id="ci_p2_2" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Implement <code>MockERPAdapter</code> extending the interface — all operations from in-memory data</div></div>
+      <div class="ci" id="ci_p2_3" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Seed mock data: 20+ POs, 10 vendors, 30 materials, 5 cost centers, 15 approval items</div></div>
+      <div class="ci" id="ci_p2_4" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Implement filtering logic: date ranges, status codes, entity IDs, module-specific filters</div></div>
+      <div class="ci" id="ci_p2_5" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Create <code>LiveRFCAdapter</code> stub with connection setup and placeholder handler methods</div></div>
+      <div class="ci" id="ci_p2_6" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Create <code>LiveODataAdapter</code> stub for S/4HANA OData endpoint pattern</div></div>
+      <div class="ci" id="ci_p2_7" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Unit test all mock adapter methods with varied inputs and edge cases</div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-wrap fi">
+    <div class="phase-hdr p-green">
+      <div class="ph-num">PHASE 03</div>
+      <div class="ph-name">MCP Tool Registration & Server Core</div>
+      <div class="ph-days">Days 5â€"8</div>
+      <div class="ph-count" id="cnt_p3">0 / 10</div>
+    </div>
+    <div class="cl-grid">
+      <div class="ci" id="ci_p3_0" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Register MM tools: <code>get_purchase_orders</code>, <code>query_inventory</code>, <code>get_vendor_details</code>, <code>get_goods_receipts</code></div></div>
+      <div class="ci" id="ci_p3_1" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Register SD tools: <code>get_sales_orders</code>, <code>check_delivery_status</code>, <code>get_customer_account</code></div></div>
+      <div class="ci" id="ci_p3_2" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Register FI/CO tools: <code>get_open_items</code>, <code>generate_business_report</code>, <code>query_budget_variance</code></div></div>
+      <div class="ci" id="ci_p3_3" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Register Workflow tools: <code>get_pending_approvals</code>, <code>approve_workflow_item</code>, <code>delegate_approval</code></div></div>
+      <div class="ci" id="ci_p3_4" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Implement <code>CallToolRequestSchema</code> handler with per-tool routing logic</div></div>
+      <div class="ci" id="ci_p3_5" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Add Zod input validation with descriptive error messages for all tools</div></div>
+      <div class="ci" id="ci_p3_6" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Implement audit logger with structured JSON logging and file rotation</div></div>
+      <div class="ci" id="ci_p3_7" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Expose audit log as an MCP Resource — readable as a live stream by the AI</div></div>
+      <div class="ci" id="ci_p3_8" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Test all tools against MCP Inspector CLI — validate schemas and responses</div></div>
+      <div class="ci" id="ci_p3_9" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Connect to Claude Desktop — run live end-to-end test with real natural-language prompts</div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-wrap fi">
+    <div class="phase-hdr">
+      <div class="ph-num">PHASE 04</div>
+      <div class="ph-name">Demo Dashboard & Visualisation</div>
+      <div class="ph-days">Days 9â€"11</div>
+      <div class="ph-count" id="cnt_p4">0 / 6</div>
+    </div>
+    <div class="cl-grid">
+      <div class="ci" id="ci_p4_0" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Build web dashboard showing live MCP JSON-RPC message log with syntax highlighting</div></div>
+      <div class="ci" id="ci_p4_1" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Animate tool call lifecycle: received → validated → routed → adapter → SAP → response</div></div>
+      <div class="ci" id="ci_p4_2" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Render ERP data as clean cards — PO table, inventory chart, approval queue</div></div>
+      <div class="ci" id="ci_p4_3" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Add "Simulate Query" mode to replay demo without live Claude session</div></div>
+      <div class="ci" id="ci_p4_4" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Ensure dashboard renders cleanly on laptop screen (1366×768 minimum)</div></div>
+      <div class="ci" id="ci_p4_5" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Export dashboard as standalone offline HTML file for presentation fallback</div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-wrap fi">
+    <div class="phase-hdr p-red">
+      <div class="ph-num">PHASE 05</div>
+      <div class="ph-name">Documentation, Polish & Demo Rehearsal</div>
+      <div class="ph-days">Days 12â€"14</div>
+      <div class="ph-count" id="cnt_p5">0 / 6</div>
+    </div>
+    <div class="cl-grid">
+      <div class="ci" id="ci_p5_0" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Write <code>README.md</code> with setup guide, architecture notes, and all tool reference docs</div></div>
+      <div class="ci" id="ci_p5_1" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Document production migration path: Mock → RFC Adapter → Live SAP system</div></div>
+      <div class="ci" id="ci_p5_2" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Prepare 7-step demo walkthrough script with timing notes and backup screenshots</div></div>
+      <div class="ci" id="ci_p5_3" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Code review — remove console logs, ensure consistent error handling, clean imports</div></div>
+      <div class="ci" id="ci_p5_4" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Record a 3-minute screen capture demo as emergency fallback video</div></div>
+      <div class="ci" id="ci_p5_5" onclick="toggleCI(this)"><div class="cb"></div><div class="ct">Final full run-through: all 12 tools, multi-tool chaining, approval flow, live audit log</div></div>
+    </div>
+  </div>
+
+</div><!-- /p4 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — DEMO & STACK
+══════════════════════════════════════════ -->
+<div class="page" id="p5">
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">01 — Demo Walkthrough</div>
+    <h2 class="sec-title">7-Step Live Demonstration</h2>
+    <p class="sec-desc">Each step builds on the previous, revealing a new capability. The narrative arc moves from system overview → read operations → write operations → multi-tool chaining → business impact.</p>
+
+    <div class="demo-step-row fi d1">
+      <div class="ds-num">01</div>
+      <div class="ds-body">
+        <h4>Architecture Walkthrough — 2 min</h4>
+        <p>Open this project document on screen. Walk through the 5-layer architecture — explaining how Claude connects via MCP protocol to the server, how tools are defined with JSON schema, and how the SAP adapter layer abstracts the backend communication. Frame the narrative: "This is the pattern we scale across every SAP module you use."</p>
+      </div>
+    </div>
+    <div class="demo-step-row fi d2">
+      <div class="ds-num">02</div>
+      <div class="ds-body">
+        <h4>Live Server Connection — 1 min</h4>
+        <p>Open terminal, show the MCP server process running. Open Claude Desktop → Settings → Developer → show the server listed as connected MCP provider. This moment proves the integration is live, not a mock-up or static demo.</p>
+        <div class="ds-result">✓ Server: SAP-MCP-Gateway v1.0.0 · 12 tools registered · stdio transport · connected</div>
+      </div>
+    </div>
+    <div class="demo-step-row fi d3">
+      <div class="ds-num">03</div>
+      <div class="ds-body">
+        <h4>Natural Language SAP Query — MM Module</h4>
+        <p>Type a plain-English procurement query. Claude reasons about which tool to call, invokes it with structured parameters, and the formatted SAP data appears as a clean table — no T-code, no transaction navigation.</p>
+        <div class="ds-prompt">→ "Show me all open purchase orders from the last 7 days that are still pending approval"</div>
+        <div class="ds-result">← AI calls get_purchase_orders({status:"pending", days:7}) · Returns 6 POs with vendor names, amounts, aging</div>
+      </div>
+    </div>
+    <div class="demo-step-row fi d1">
+      <div class="ds-num">04</div>
+      <div class="ds-body">
+        <h4>Cross-Module Data Composition</h4>
+        <p>Show how the AI can compose multiple tool calls into a single coherent response — bridging data across SAP modules that would require multiple T-codes and manual joining by a human SAP user.</p>
+        <div class="ds-prompt">→ "For all materials below reorder point in Plant 1010, show me their current open POs and which vendors supply them"</div>
+        <div class="ds-result">← AI chains: query_inventory() → get_purchase_orders(material_ids) → get_vendor_details() · One natural answer</div>
+      </div>
+    </div>
+    <div class="demo-step-row fi d2">
+      <div class="ds-num">05</div>
+      <div class="ds-body">
+        <h4>AI-Assisted Approval Workflow</h4>
+        <p>Demonstrate that the AI doesn't just read — it can act. The approval tool writes to SAP state (via the adapter), logs the action, and confirms completion. This is where the business value multiplies.</p>
+        <div class="ds-prompt">→ "I have 8 pending approvals. Summarise them — amounts, vendors, urgency. Then approve all POs under ₹50,000 from pre-approved vendors."</div>
+        <div class="ds-result">← AI: get_pending_approvals() → summarise → approve_workflow_item() × N · Each action logged to audit trail</div>
+      </div>
+    </div>
+    <div class="demo-step-row fi d3">
+      <div class="ds-num">06</div>
+      <div class="ds-body">
+        <h4>Live MCP Message Log</h4>
+        <p>Switch to the demo dashboard — show the JSON-RPC message stream. Raw MCP protocol messages scrolling in real time. This is for the technical audience and demonstrates full transparency, auditability, and the clean protocol design.</p>
+        <div class="ds-result">← Live feed: {jsonrpc:"2.0", method:"tools/call", params:{name:"approve_workflow_item", arguments:{...}}, id:7}</div>
+      </div>
+    </div>
+    <div class="demo-step-row fi d1">
+      <div class="ds-num">07</div>
+      <div class="ds-body">
+        <h4>Production Roadmap — Close Strong</h4>
+        <p>End with the path forward: replacing mock adapter with live RFC/OData adapter, adding per-user auth, deploying on internal network, and scaling to every SAP module in the business. Leave with a clear ask: access to sandbox credentials or RFC function list to begin the live adapter.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL SIMULATOR -->
+  <section class="sec fi">
+    <div class="sec-eyebrow">LIVE PREVIEW</div>
+    <h2 class="sec-title">Interactive MCP Session</h2>
+    <p class="sec-desc">Watch a simulated AI-to-SAP conversation through the MCP protocol. Each step shows the natural language query, tool selection, and structured SAP response.</p>
+    <div class="terminal-wrap fi">
+      <div class="terminal-bar">
+        <div class="terminal-dot td-r"></div>
+        <div class="terminal-dot td-y"></div>
+        <div class="terminal-dot td-g"></div>
+        <div class="terminal-title">SAP-MCP-Gateway v1.0 — Claude Desktop Session</div>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <div class="t-info">SAP·MCP Intelligence Gateway v1.0.0</div>
+        <div class="t-info">12 tools registered · stdio transport · connected</div>
+        <div class="t-info">─────────────────────────────────────────</div>
+        <div class="t-info">Awaiting demo sequence...</div>
+      </div>
+      <div class="terminal-controls">
+        <button class="term-btn" id="termPlayBtn" onclick="startTerminalDemo()">▶ Play Demo</button>
+        <button class="term-btn" id="termNextBtn" onclick="nextTerminalStep()">⏭ Next Step</button>
+        <button class="term-btn" id="termResetBtn" onclick="resetTerminalDemo()">↺ Reset</button>
+        <span class="term-step-info" id="termStepInfo">Step 0 / 5</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">02 — MCP Tool Reference</div>
+    <h2 class="sec-title">All 12 Registered Tools</h2>
+    <div class="card fi" style="padding:0;overflow:hidden;">
+      <table class="ttable">
+        <thead>
+          <tr><th>Tool Name</th><th>Module</th><th>Description</th><th>Key Parameters</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="tname">get_purchase_orders</span></td><td><span class="tmod">MM</span></td><td style="color:var(--text-muted);font-size:13px;">Retrieve POs filtered by status, date range, vendor, or material. Returns structured list with amounts and approval state.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">status?, date_from?, vendor_id?, material_id?</td></tr>
+          <tr><td><span class="tname">query_inventory</span></td><td><span class="tmod">MM/WM</span></td><td style="color:var(--text-muted);font-size:13px;">Check stock levels for materials across plants. Returns quantity, unit, reorder point, and shortage status.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">material_id?, plant?, below_reorder?</td></tr>
+          <tr><td><span class="tname">get_vendor_details</span></td><td><span class="tmod">MM</span></td><td style="color:var(--text-muted);font-size:13px;">Vendor master record including payment terms, open orders, contact, and compliance status.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">vendor_id OR vendor_name</td></tr>
+          <tr><td><span class="tname">get_goods_receipts</span></td><td><span class="tmod">MM</span></td><td style="color:var(--text-muted);font-size:13px;">Goods receipts posted against POs in a date range. Used to reconcile deliveries vs orders.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">po_id?, plant?, date_from?</td></tr>
+          <tr><td><span class="tname">get_pending_approvals</span></td><td><span class="tmod">WF</span></td><td style="color:var(--text-muted);font-size:13px;">All workflow items pending action — sorted by urgency, value, and overdue status.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">user_id?, module?, priority?</td></tr>
+          <tr><td><span class="tname">approve_workflow_item</span></td><td><span class="tmod">WF</span></td><td style="color:var(--text-muted);font-size:13px;">Approve or reject a workflow item. Reason required for reject. Full audit log entry created.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">item_id, action, reason?</td></tr>
+          <tr><td><span class="tname">get_sales_orders</span></td><td><span class="tmod">SD</span></td><td style="color:var(--text-muted);font-size:13px;">Customer sales orders with status, delivery date, and billing state. Filter by customer or date.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">customer_id?, status?, date_from?</td></tr>
+          <tr><td><span class="tname">check_delivery_status</span></td><td><span class="tmod">SD</span></td><td style="color:var(--text-muted);font-size:13px;">Current delivery status and tracking for open sales order deliveries.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">delivery_id OR sales_order_id</td></tr>
+          <tr><td><span class="tname">get_open_items</span></td><td><span class="tmod">FI</span></td><td style="color:var(--text-muted);font-size:13px;">Open accounts payable / receivable items. Overdue items flagged. Filter by company code.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">company_code?, type(AP/AR), overdue?</td></tr>
+          <tr><td><span class="tname">query_budget_variance</span></td><td><span class="tmod">CO</span></td><td style="color:var(--text-muted);font-size:13px;">Budget vs actual for cost centers, internal orders, or profit centers. Period and year selectable.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">cost_center?, period, fiscal_year</td></tr>
+          <tr><td><span class="tname">generate_business_report</span></td><td><span class="tmod">FI/CO</span></td><td style="color:var(--text-muted);font-size:13px;">Structured business summary — procurement spend, cost center P&amp;L, or open items report for a given period.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">report_type, period, entity?</td></tr>
+          <tr><td><span class="tname">get_work_orders</span></td><td><span class="tmod">PM</span></td><td style="color:var(--text-muted);font-size:13px;">Plant maintenance work orders — open, overdue, or scheduled. Filter by equipment or work center.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">equipment_id?, status?, plant?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">03 — Technology Stack</div>
+    <h2 class="sec-title">Tech Stack</h2>
+    <div class="grid-2">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:0.15em;margin-bottom:12px;">SERVER · CORE</div>
+        <div class="stack-item fi d1"><div class="sdot sdot-o"></div><div class="sname">Node.js 20 + TypeScript</div><div class="sdesc">Runtime + type safety</div><span class="sbadge sb-core">CORE</span></div>
+        <div class="stack-item fi d2"><div class="sdot sdot-o"></div><div class="sname">@modelcontextprotocol/sdk</div><div class="sdesc">Official MCP SDK — Anthropic</div><span class="sbadge sb-core">CORE</span></div>
+        <div class="stack-item fi d3"><div class="sdot sdot-o"></div><div class="sname">Zod</div><div class="sdesc">Runtime schema validation</div><span class="sbadge sb-core">CORE</span></div>
+        <div class="stack-item fi d1"><div class="sdot sdot-b"></div><div class="sname">Express.js</div><div class="sdesc">HTTP/SSE transport layer</div><span class="sbadge sb-demo">DEMO</span></div>
+        <div class="stack-item fi d2"><div class="sdot sdot-d"></div><div class="sname">node-rfc</div><div class="sdesc">SAP NWRFC SDK bindings</div><span class="sbadge sb-prod">PRODUCTION</span></div>
+        <div class="stack-item fi d3"><div class="sdot sdot-d"></div><div class="sname">node-fetch / axios</div><div class="sdesc">SAP OData HTTP client</div><span class="sbadge sb-prod">PRODUCTION</span></div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:0.15em;margin-bottom:12px;">CLIENT · TESTING · INFRA</div>
+        <div class="stack-item fi d1"><div class="sdot sdot-o"></div><div class="sname">Claude Desktop</div><div class="sdesc">Primary MCP host for demo</div><span class="sbadge sb-core">CORE</span></div>
+        <div class="stack-item fi d2"><div class="sdot sdot-b"></div><div class="sname">MCP Inspector CLI</div><div class="sdesc">Protocol-level debug tool</div><span class="sbadge sb-demo">DEMO</span></div>
+        <div class="stack-item fi d3"><div class="sdot sdot-b"></div><div class="sname">Vitest</div><div class="sdesc">Unit testing for adapters</div><span class="sbadge sb-demo">DEMO</span></div>
+        <div class="stack-item fi d1"><div class="sdot sdot-d"></div><div class="sname">PM2 / systemd</div><div class="sdesc">Process management in prod</div><span class="sbadge sb-prod">PRODUCTION</span></div>
+        <div class="stack-item fi d2"><div class="sdot sdot-d"></div><div class="sname">OAuth 2.0 / JWT</div><div class="sdesc">Auth for remote deployment</div><span class="sbadge sb-prod">PRODUCTION</span></div>
+        <div class="stack-item fi d3"><div class="sdot sdot-d"></div><div class="sname">Pino / Winston</div><div class="sdesc">Structured audit logging</div><span class="sbadge sb-prod">PRODUCTION</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">04 — Scope</div>
+    <h2 class="sec-title">Project Scope Definition</h2>
+    <div class="grid-2">
+      <div class="scope-box scope-in fi">
+        <h4 style="color:var(--green);">✓ &nbsp;In Scope — Prototype</h4>
+        <ul>
+          <li>MCP server with 12 SAP-structured tools across 5 modules</li>
+          <li>Mock SAP data layer with realistic seeded records</li>
+          <li>stdio transport for Claude Desktop integration</li>
+          <li>Full audit logging of every AI-triggered action</li>
+          <li>Multi-module data composition (cross-module queries)</li>
+          <li>Approval workflow write operations via AI</li>
+          <li>Demo visualisation dashboard with live message log</li>
+          <li>Architecture documentation and full tool reference</li>
+          <li>Production migration path documented</li>
+        </ul>
+      </div>
+      <div class="scope-box scope-out fi">
+        <h4 style="color:var(--text-muted);">â—‹ &nbsp;Out of Scope — Phase 2+</h4>
+        <ul>
+          <li>Live SAP RFC/OData connection (needs credentials)</li>
+          <li>Multi-user authentication + role-based tool access</li>
+          <li>Production server deployment + DevOps pipeline</li>
+          <li>SAP Fiori or web-embedded AI chat interface</li>
+          <li>Custom SAP AI model fine-tuning</li>
+          <li>High-availability clustering and failover</li>
+          <li>Integration with SAP BTP or SAP AI Core</li>
+          <li>Mobile app or Outlook/Teams AI integration</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /p5 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 6 — TIMELINE & VALUE
+══════════════════════════════════════════ -->
+<div class="page" id="p6">
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">01 — Delivery Schedule</div>
+    <h2 class="sec-title">2-Week Sprint Timeline</h2>
+    <p class="sec-desc">A focused 14-day sprint from kickoff to live demo. Clear milestones at end of each phase, with the core server functional by Day 8 and full demo-ready by Day 11.</p>
+
+    <div class="gantt-wrap fi">
+      <div class="gantt-header">
+        <div class="gantt-hcell">TASK</div>
+        <div class="gantt-hcell">D1</div><div class="gantt-hcell">D2</div>
+        <div class="gantt-hcell">D3</div><div class="gantt-hcell">D4</div>
+        <div class="gantt-hcell">D5</div><div class="gantt-hcell">D6</div><div class="gantt-hcell">D7</div><div class="gantt-hcell">D8</div>
+        <div class="gantt-hcell">D9</div><div class="gantt-hcell">D10</div><div class="gantt-hcell">D11</div>
+        <div class="gantt-hcell">D12</div><div class="gantt-hcell">D13</div><div class="gantt-hcell">D14</div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-task">Environment Setup</div>
+        <div class="gantt-cell"><div class="gantt-bar gb-orange"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-orange"></div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-task">Mock Data Layer</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-blue"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-blue"></div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-task">MCP Server Core</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-orange"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-orange"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-orange"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-orange"></div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-task">Tool Registration</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-blue"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-blue"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-blue"></div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-task">Demo Dashboard</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-green"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-green"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-green"></div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-task">Docs + Rehearsal</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-red"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-red"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar gb-red"></div></div>
+      </div>
+    </div>
+
+    <div class="milestone-row fi" style="margin-top:16px;">
+      <div class="milestone"><div class="ms-dot" style="background:var(--orange);"></div><div class="ms-body"><h5>Server Running</h5><span>End of Day 2</span></div></div>
+      <div class="milestone"><div class="ms-dot" style="background:var(--blue);"></div><div class="ms-body"><h5>Mock Data Complete</h5><span>End of Day 4</span></div></div>
+      <div class="milestone"><div class="ms-dot" style="background:var(--orange);box-shadow:0 0 8px var(--orange);"></div><div class="ms-body"><h5>Claude Desktop E2E Test</h5><span>End of Day 8</span></div></div>
+      <div class="milestone"><div class="ms-dot" style="background:var(--green);box-shadow:0 0 8px var(--green);"></div><div class="ms-body"><h5>Demo Ready</h5><span>End of Day 11</span></div></div>
+      <div class="milestone"><div class="ms-dot" style="background:var(--red);box-shadow:0 0 8px var(--red);"></div><div class="ms-body"><h5>Presentation Day</h5><span>Day 14</span></div></div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">02 — Business Case</div>
+    <h2 class="sec-title">Value Proposition</h2>
+    <div class="grid-3">
+      <div class="val-card fi d1"><span class="vc-icon">⚡</span><h4>Instant SAP Access</h4><p>Every staff member — from managers to finance controllers — gets natural-language access to SAP data without training, T-codes, or support requests. Query the system like a conversation.</p><span class="val-tag">10× faster information retrieval</span></div>
+      <div class="val-card fi d2"><span class="vc-icon">🔗</span><h4>Model-Agnostic by Design</h4><p>The MCP server works with Claude, GPT-4, Gemini, or any private LLM your company adopts. The integration investment compounds — build once, works with every AI model forever.</p><span class="val-tag">Future-proof architecture</span></div>
+      <div class="val-card fi d3"><span class="vc-icon">📋</span><h4>Enterprise Audit Trail</h4><p>Every AI-triggered SAP action — reads and writes — is logged with who requested it, what parameters were used, and what was returned. AI-assisted operations are safe and fully reversible.</p><span class="val-tag">Compliance-ready by default</span></div>
+      <div class="val-card fi d1"><span class="vc-icon">🏗️️</span><h4>Modular Architecture</h4><p>Start with 6 tools, scale to 60+. Adding a new SAP operation takes hours, not weeks. The tool registry pattern means every new business need is a small, isolated addition — not a new project.</p><span class="val-tag">Low marginal cost per feature</span></div>
+      <div class="val-card fi d2"><span class="vc-icon">🎯</span><h4>New Service Offering</h4><p>For an SAP services company, an MCP-enabled practice creates a new revenue stream. Offer clients AI-assisted SAP access as a managed service — on top of existing SAP investments, no rip-and-replace.</p><span class="val-tag">Competitive differentiation</span></div>
+      <div class="val-card fi d3"><span class="vc-icon">🔒</span><h4>On-Premises Deployment</h4><p>The MCP server runs entirely on internal infrastructure. SAP data never leaves the corporate network. The AI connects via secure local protocols — no cloud dependency for sensitive ERP data.</p><span class="val-tag">Data sovereignty guaranteed</span></div>
+    </div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <section class="sec fi">
+    <div class="sec-eyebrow">03 — Roadmap</div>
+    <h2 class="sec-title">Next Steps</h2>
+    <div class="next-item fi d1">
+      <div class="ni-num">01</div>
+      <div class="ni-body"><h4>Build & Demo the Prototype</h4><p>Complete the 14-day sprint — working MCP server with 12 tools, mock SAP data, Claude Desktop integration, and demo dashboard. Deliver the live presentation to validate the concept and team fit.</p></div>
+      <span class="ni-tag ni-now">THIS SPRINT</span>
+    </div>
+    <div class="next-item fi d2">
+      <div class="ni-num">02</div>
+      <div class="ni-body"><h4>Identify Target SAP Modules</h4><p>Post-demo, define which SAP modules are highest priority for the team's ongoing projects. Get access to sandbox RFC credentials or OData API spec to begin the live adapter development.</p></div>
+      <span class="ni-tag ni-now">POST-DEMO</span>
+    </div>
+    <div class="next-item fi d3">
+      <div class="ni-num">03</div>
+      <div class="ni-body"><h4>Build the Live SAP Adapter</h4><p>Replace the mock adapter with a real <code>LiveRFCAdapter</code> or <code>LiveODataAdapter</code> against a staging/sandbox system. Validate each tool against live SAP data with the same interface — zero changes to tool definitions.</p></div>
+      <span class="ni-tag ni-later">PHASE 2</span>
+    </div>
+    <div class="next-item fi d1">
+      <div class="ni-num">04</div>
+      <div class="ni-body"><h4>Add Auth + Multi-User Support</h4><p>Implement OAuth 2.0 with role-based tool scopes. Different users get different tool access based on SAP authorization objects. Deploy as a shared internal service accessible to the whole team.</p></div>
+      <span class="ni-tag ni-later">PHASE 2</span>
+    </div>
+    <div class="next-item fi d2">
+      <div class="ni-num">05</div>
+      <div class="ni-body"><h4>Expand to Client SAP Projects</h4><p>Package the MCP server as a configurable, SAP-module-agnostic solution. Deploy for specific client SAP systems as a value-add service — enabling AI-assisted workflows on top of any SAP installation the company supports.</p></div>
+      <span class="ni-tag ni-later">PHASE 3</span>
+    </div>
+  </section>
+
+</div><!-- /p6 -->
+
+</div><!-- /main-wrap -->
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+// â"€â"€â"€ TIMER â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+const START_TIME = new Date('2026-05-24T01:00:00');
+
+function updateTimer() {
+  const now = new Date();
+  const diff = Math.floor((now - START_TIME) / 1000);
+  if (diff < 0) { document.getElementById('timerDisplay').textContent = '00:00:00:00'; return; }
+  const days = Math.floor(diff / 86400);
+  const hrs  = Math.floor((diff % 86400) / 3600);
+  const mins = Math.floor((diff % 3600) / 60);
+  const secs = diff % 60;
+  document.getElementById('timerDisplay').textContent =
+    String(days).padStart(2,'0') + ':' +
+    String(hrs).padStart(2,'0')  + ':' +
+    String(mins).padStart(2,'0') + ':' +
+    String(secs).padStart(2,'0');
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+// â"€â"€â"€ THEME TOGGLE â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('mcp_theme', t);
+}
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  setTheme(current === 'light' ? 'dark' : 'light');
+});
+const saved = localStorage.getItem('mcp_theme');
+if (saved) setTheme(saved);
+
+// â"€â"€â"€ PAGE TABS â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+function switchPage(pageId, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(triggerFadeIns, 80);
+}
+
+// â"€â"€â"€ CHECKLIST + LOCALSTORAGE â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+const STORAGE_KEY = 'mcp_checklist_v2';
+
+function loadChecks() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    Object.keys(saved).forEach(id => {
+      const el = document.getElementById(id);
+      if (el && saved[id]) el.classList.add('done');
+    });
+  } catch(e) {}
+}
+
+function saveChecks() {
+  const state = {};
+  document.querySelectorAll('.ci').forEach(el => {
+    state[el.id] = el.classList.contains('done');
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function toggleCI(el) {
+  el.classList.toggle('done');
+  saveChecks();
+  updateProgress();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.ci');
+  const done = document.querySelectorAll('.ci.done');
+  const total = all.length;
+  const doneN = done.length;
+  const pct = total > 0 ? Math.round((doneN / total) * 100) : 0;
+
+  const dEl = document.getElementById('doneCount');
+  const tEl = document.getElementById('totalCount');
+  const pEl = document.getElementById('pctCount');
+  const fEl = document.getElementById('progFill');
+
+  if (dEl) dEl.textContent = doneN;
+  if (tEl) tEl.textContent = total;
+  if (pEl) pEl.textContent = pct + '%';
+  if (fEl) fEl.style.width = pct + '%';
+
+  // Update per-phase counts
+  const phases = ['p1','p2','p3','p4','p5'];
+  phases.forEach(ph => {
+    const phItems = document.querySelectorAll('[id^="ci_' + ph + '_"]');
+    const phDone  = document.querySelectorAll('[id^="ci_' + ph + '_"].done');
+    const cntEl   = document.getElementById('cnt_' + ph);
+    if (cntEl) cntEl.textContent = phDone.length + ' / ' + phItems.length;
+  });
+}
+
+loadChecks();
+updateProgress();
+
+// â"€â"€â"€ FADE-IN OBSERVER â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+function triggerFadeIns() {
+  document.querySelectorAll('.fi').forEach(el => {
+    observer.observe(el);
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) el.classList.add('vis');
+  });
+}
+
+window.addEventListener('load', () => {
+  setTimeout(triggerFadeIns, 100);
+});
+</script>
+
+<!-- PRESENTATION DOTS -->
+<div class="pres-dots" id="presDots">
+  <div class="pres-dot active" onclick="goToPage(0)"></div>
+  <div class="pres-dot" onclick="goToPage(1)"></div>
+  <div class="pres-dot" onclick="goToPage(2)"></div>
+  <div class="pres-dot" onclick="goToPage(3)"></div>
+  <div class="pres-dot" onclick="goToPage(4)"></div>
+  <div class="pres-dot" onclick="goToPage(5)"></div>
+</div>
+
+<script>
+// ═══ PARTICLE CANVAS ═══
+(function(){
+  const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+  let w,h,particles=[];
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const colors=['rgba(217,95,10,','rgba(26,94,168,','rgba(28,122,62,'];
+  for(let i=0;i<60;i++) particles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,r:Math.random()*2+1,c:colors[i%3]});
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach((p,i)=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c+'0.6)';ctx.fill();
+      for(let j=i+1;j<particles.length;j++){
+        const dx=p.x-particles[j].x,dy=p.y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=p.c+(0.15*(1-d/120))+')';ctx.lineWidth=0.5;ctx.stroke();}
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══ READING PROGRESS BAR ═══
+window.addEventListener('scroll',()=>{
+  const st=window.scrollY,dh=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=dh>0?Math.min((st/dh)*100,100):0;
+  document.getElementById('readingProgress').style.width=pct+'%';
+});
+
+// ═══ KEYBOARD NAVIGATION ═══
+const PAGE_IDS=['p1','p2','p3','p4','p5','p6'];
+let currentPageIdx=0;
+function goToPage(idx){
+  if(idx<0||idx>=PAGE_IDS.length)return;
+  currentPageIdx=idx;
+  const btn=document.querySelectorAll('.tab-btn')[idx];
+  if(btn) switchPage(PAGE_IDS[idx],btn);
+  document.querySelectorAll('.pres-dot').forEach((d,i)=>{d.classList.toggle('active',i===idx);});
+}
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='ArrowRight'){e.preventDefault();goToPage(currentPageIdx+1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();goToPage(currentPageIdx-1);}
+  if(e.key>='1'&&e.key<='6'){e.preventDefault();goToPage(parseInt(e.key)-1);}
+  if(e.key==='Escape'&&document.body.classList.contains('presentation-mode')){
+    document.body.classList.remove('presentation-mode');
+  }
+});
+
+// ═══ PRESENTATION MODE ═══
+document.getElementById('presBtn').addEventListener('click',()=>{
+  document.body.classList.toggle('presentation-mode');
+  if(document.body.classList.contains('presentation-mode')){
+    if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  } else {
+    if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  }
+});
+
+// ═══ COUNTER ANIMATION ═══
+const counterObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&!e.target.dataset.counted){
+      e.target.dataset.counted='1';
+      const target=parseInt(e.target.dataset.target)||0;
+      const suffix=e.target.dataset.suffix||'';
+      let current=0;
+      const step=Math.max(1,Math.floor(target/40));
+      const timer=setInterval(()=>{
+        current+=step;
+        if(current>=target){current=target;clearInterval(timer);}
+        e.target.textContent=current+suffix;
+      },30);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('.count-up').forEach(el=>counterObserver.observe(el));
+
+// ═══ CARD TILT EFFECT ═══
+document.querySelectorAll('.tilt-card').forEach(card=>{
+  card.addEventListener('mousemove',(e)=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-0.5;
+    const y=(e.clientY-r.top)/r.height-0.5;
+    card.style.transform=`perspective(600px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-2px)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='';});
+});
+
+// ═══ TYPING ANIMATION ═══
+(function(){
+  const el=document.getElementById('heroSub');
+  if(!el)return;
+  const text=el.textContent.trim();
+  el.textContent='';el.classList.add('typing-cursor');
+  let i=0;
+  function type(){
+    if(i<text.length){el.textContent+=text[i];i++;setTimeout(type,i<20?25:12);}
+    else{el.classList.remove('typing-cursor');}
+  }
+  setTimeout(type,600);
+})();
+
+// ═══ TERMINAL SIMULATOR ═══
+const termSteps=[
+  {lines:[
+    {cls:'t-prompt',text:'user@claude-desktop:~$'},
+    {cls:'t-cmd',text:' "Show all open POs from last 7 days pending approval"'},
+    {cls:'t-info',text:''},
+    {cls:'t-orange',text:'→ AI reasoning: selecting tool get_purchase_orders'},
+    {cls:'t-info',text:'  params: { status: "pending", days: 7 }'},
+  ]},
+  {lines:[
+    {cls:'t-info',text:''},
+    {cls:'t-result',text:'← tools/call response:'},
+    {cls:'t-info',text:'  ┌──────────┬────────────────┬───────────┬──────────┐'},
+    {cls:'t-info',text:'  │ PO#      │ Vendor         │ Amount    │ Status   │'},
+    {cls:'t-info',text:'  ├──────────┼────────────────┼───────────┼──────────┤'},
+    {cls:'t-info',text:'  │ 4500012  │ TechSupply AG  │ ₹4,50,000 │ PENDING  │'},
+    {cls:'t-info',text:'  │ 4500015  │ MetalWorks Ltd │ ₹2,80,000 │ PENDING  │'},
+    {cls:'t-info',text:'  │ 4500018  │ ChemCorp India │ ₹1,20,000 │ PENDING  │'},
+    {cls:'t-info',text:'  └──────────┴────────────────┴───────────┴──────────┘'},
+  ]},
+  {lines:[
+    {cls:'t-info',text:''},
+    {cls:'t-prompt',text:'user@claude-desktop:~$'},
+    {cls:'t-cmd',text:' "Approve POs under ₹2L from pre-approved vendors"'},
+    {cls:'t-info',text:''},
+    {cls:'t-orange',text:'→ AI: get_pending_approvals() → filter → approve_workflow_item()'},
+  ]},
+  {lines:[
+    {cls:'t-info',text:''},
+    {cls:'t-result',text:'← Approved: PO 4500018 (₹1,20,000) — ChemCorp India ✓'},
+    {cls:'t-info',text:'  audit_log: { action: "approve", user: "ai_agent", item: "WF-0018" }'},
+    {cls:'t-info',text:'  timestamp: 2026-05-26T00:15:32.441Z'},
+  ]},
+  {lines:[
+    {cls:'t-info',text:''},
+    {cls:'t-info',text:'─────────────────────────────────────────'},
+    {cls:'t-prompt',text:'✓ Demo complete.'},
+    {cls:'t-info',text:'  3 POs queried · 1 approved · Full audit trail logged'},
+    {cls:'t-info',text:'  Session duration: 4.2s · 3 tool calls'},
+  ]},
+];
+let termStep=0,termPlaying=false,termTimer=null;
+function addTermLine(cls,text){
+  const d=document.createElement('div');d.className=cls;d.textContent=text;
+  document.getElementById('terminalBody').appendChild(d);
+  document.getElementById('terminalBody').scrollTop=9999;
+}
+function playStep(idx){
+  if(idx>=termSteps.length)return;
+  const step=termSteps[idx];let li=0;
+  function nextLine(){
+    if(li<step.lines.length){
+      addTermLine(step.lines[li].cls,step.lines[li].text);li++;
+      setTimeout(nextLine,step.lines[li-1].cls==='t-cmd'?800:150);
+    }
+  }
+  nextLine();
+  document.getElementById('termStepInfo').textContent='Step '+(idx+1)+' / '+termSteps.length;
+}
+function startTerminalDemo(){
+  if(termPlaying)return;termPlaying=true;
+  document.getElementById('termPlayBtn').classList.add('active');
+  document.getElementById('terminalBody').innerHTML='<div class="t-info">SAP·MCP Intelligence Gateway v1.0.0</div><div class="t-info">Session started...</div><div class="t-info">─────────────────────────────────────────</div>';
+  termStep=0;
+  function autoPlay(){
+    if(termStep<termSteps.length){playStep(termStep);termStep++;termTimer=setTimeout(autoPlay,2500);}
+    else{termPlaying=false;document.getElementById('termPlayBtn').classList.remove('active');}
+  }
+  setTimeout(autoPlay,500);
+}
+function nextTerminalStep(){
+  if(termStep<termSteps.length){playStep(termStep);termStep++;}
+  document.getElementById('termStepInfo').textContent='Step '+termStep+' / '+termSteps.length;
+}
+function resetTerminalDemo(){
+  clearTimeout(termTimer);termPlaying=false;termStep=0;
+  document.getElementById('termPlayBtn').classList.remove('active');
+  document.getElementById('terminalBody').innerHTML='<div class="t-info">SAP·MCP Intelligence Gateway v1.0.0</div><div class="t-info">12 tools registered · stdio transport · connected</div><div class="t-info">─────────────────────────────────────────</div><div class="t-info">Awaiting demo sequence...</div>';
+  document.getElementById('termStepInfo').textContent='Step 0 / '+termSteps.length;
+}
+
+// ═══ CONFETTI ═══
+function fireConfetti(){
+  const c=document.createElement('div');c.className='confetti-container';
+  const colors=['#D95F0A','#F07320','#1C7A3E','#1A5EA8','#FF5050','#febc2e'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'%';p.style.top='-10px';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay=Math.random()*0.5+'s';
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';
+    c.appendChild(p);
+  }
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),4000);
+}
+
+// ═══ ENHANCED CHECKLIST WITH CONFETTI ═══
+const origToggle=window.toggleCI;
+window.toggleCI=function(el){
+  origToggle(el);
+  // Check if any phase is fully complete
+  ['p1','p2','p3','p4','p5'].forEach(ph=>{
+    const items=document.querySelectorAll('[id^="ci_'+ph+'_"]');
+    const done=document.querySelectorAll('[id^="ci_'+ph+'_"].done');
+    if(items.length>0&&done.length===items.length) fireConfetti();
+  });
+};
+
+// ═══ GANTT TODAY MARKER ═══
+(function(){
+  const gantt=document.querySelector('.gantt-wrap');
+  if(!gantt)return;
+  const start=new Date('2026-05-24');
+  const now=new Date();
+  const daysDiff=Math.floor((now-start)/(1000*60*60*24));
+  if(daysDiff>=0&&daysDiff<=14){
+    const taskColWidth=200;
+    const totalWidth=gantt.offsetWidth-taskColWidth;
+    const dayWidth=totalWidth/14;
+    const marker=document.createElement('div');
+    marker.className='gantt-today';
+    marker.style.left=(taskColWidth+dayWidth*daysDiff+dayWidth*0.5)+'px';
+    gantt.appendChild(marker);
+  }
+})();
+
+// ═══ MARK COMPLETED CHECKLIST ITEMS ═══
+// Auto-mark all items completed during implementation
+(function(){
+  const completed=[
+    // Phase 1: Environment & Foundation (ALL DONE)
+    'ci_p1_0','ci_p1_1','ci_p1_2','ci_p1_3','ci_p1_4','ci_p1_5',
+    // Phase 2: Mock Data & Adapters (ALL DONE)
+    'ci_p2_0','ci_p2_1','ci_p2_2','ci_p2_3','ci_p2_4',
+    // Phase 3: MCP Tool Registration (DONE - 12 tools registered)
+    'ci_p3_0','ci_p3_1','ci_p3_2','ci_p3_3','ci_p3_4','ci_p3_5',
+    // Phase 4: Demo Dashboard (DONE)
+    'ci_p4_0','ci_p4_1','ci_p4_2','ci_p4_3','ci_p4_4','ci_p4_5',
+  ];
+  completed.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&!el.classList.contains('done')) el.classList.add('done');
+  });
+  saveChecks();
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>
