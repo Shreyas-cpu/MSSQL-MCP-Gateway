@@ -2,14 +2,14 @@
 title SAP-MCP :: Live Audit Log Monitor
 color 0E
 echo.
-echo  ╔══════════════════════════════════════════════════╗
-echo  ║   SAP·MCP Intelligence Gateway                  ║
-echo  ║   Live MCP Communication Log                     ║
-echo  ╚══════════════════════════════════════════════════╝
+echo  ====================================================
+echo    SAP-MCP Intelligence Gateway
+echo    Live MCP Communication Log
+echo  ====================================================
 echo.
 echo  Monitoring audit-logs/ for new MCP tool invocations...
 echo  Each line = one tool call (timestamp, tool, params, result)
-echo  ─────────────────────────────────────────────────
+echo  ----------------------------------------------------
 echo.
 
 cd /d "D:\Projects\MCP System"
@@ -27,7 +27,7 @@ set "DAY=%dt:~6,2%"
 set "LOGFILE=audit-logs\audit-%YEAR%-%MONTH%-%DAY%.jsonl"
 
 echo  Log file: %LOGFILE%
-echo  ─────────────────────────────────────────────────
+echo  ----------------------------------------------------
 echo.
 
 :: If the file doesn't exist yet, create it

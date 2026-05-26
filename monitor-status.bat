@@ -1,26 +1,20 @@
 @echo off
 title SAP-MCP :: System Status Monitor
 color 0F
-echo.
-echo  ╔══════════════════════════════════════════════════╗
-echo  ║   SAP·MCP Intelligence Gateway                  ║
-echo  ║   System Status Monitor                          ║
-echo  ╚══════════════════════════════════════════════════╝
-echo.
 
 cd /d "D:\Projects\MCP System"
 
 :loop
 cls
 echo.
-echo  ╔══════════════════════════════════════════════════╗
-echo  ║   SAP·MCP Intelligence Gateway — Status          ║
-echo  ╚══════════════════════════════════════════════════╝
+echo  ====================================================
+echo    SAP-MCP Intelligence Gateway - System Status
+echo  ====================================================
 echo.
 
 :: Current time
 echo  TIME: %date% %time%
-echo  ─────────────────────────────────────────────────
+echo  ----------------------------------------------------
 
 :: Check Dashboard Server (port 3000)
 echo.
@@ -52,7 +46,7 @@ echo.
 powershell -Command "$size = [math]::Round((Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notlike '*node_modules*' } | Measure-Object Length -Sum).Sum / 1KB, 1); Write-Host '  [PROJECT SIZE]  ' -NoNewline; Write-Host \"$size KB\" -ForegroundColor Cyan -NoNewline; Write-Host ' (excl. node_modules)'"
 
 echo.
-echo  ─────────────────────────────────────────────────
+echo  ----------------------------------------------------
 echo  API ENDPOINTS:
 echo   GET /api/purchase-orders     GET /api/vendors
 echo   GET /api/inventory           GET /api/sales-orders
@@ -61,7 +55,7 @@ echo   GET /api/work-orders         GET /api/delivery-status
 echo   GET /api/pending-approvals   GET /api/report
 echo   POST /api/approve            GET /api/audit-log
 echo.
-echo  ─────────────────────────────────────────────────
+echo  ----------------------------------------------------
 echo  Refreshing in 10 seconds... (Press Ctrl+C to exit)
 
 timeout /t 10 /nobreak >nul

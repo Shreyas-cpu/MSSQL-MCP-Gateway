@@ -2,10 +2,10 @@
 title SAP-MCP :: Shutdown
 color 0C
 echo.
-echo  ╔══════════════════════════════════════════════════╗
-echo  ║   SAP·MCP Intelligence Gateway                  ║
-echo  ║   Shutdown All Services                          ║
-echo  ╚══════════════════════════════════════════════════╝
+echo  ====================================================
+echo    SAP-MCP Intelligence Gateway
+echo    Shutdown All Services
+echo  ====================================================
 echo.
 echo  Stopping all Node.js processes...
 echo.
