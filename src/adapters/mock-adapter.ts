@@ -9,6 +9,10 @@ import {
 } from '../types/sap.js';
 import { PURCHASE_ORDERS, VENDORS, MATERIALS, GOODS_RECEIPTS } from '../mock-data/mm-data.js';
 import { SALES_ORDERS, DELIVERY_STATUS, OPEN_ITEMS, BUDGET_DATA, WORK_ORDERS, WAREHOUSE_STOCK, WORKFLOW_ITEMS } from '../mock-data/other-data.js';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const STATE_FILE = path.join(__dirname, '..', '..', 'audit-logs', 'workflow-state.json');
 
 /**
  * Mock ERP Adapter — returns realistic in-memory SAP data.
@@ -17,8 +21,35 @@ import { SALES_ORDERS, DELIVERY_STATUS, OPEN_ITEMS, BUDGET_DATA, WORK_ORDERS, WA
 export class MockERPAdapter extends ERPAdapterInterface {
   readonly name = 'MockERPAdapter';
 
-  // Mutable copy so approvals persist during session
-  private workflowItems = [...WORKFLOW_ITEMS];
+  private loadWorkflowItems(): WorkflowItem[] {
+    try {
+      const dir = path.dirname(STATE_FILE);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      if (fs.existsSync(STATE_FILE)) {
+        const data = fs.readFileSync(STATE_FILE, 'utf8');
+        return JSON.parse(data);
+      }
+    } catch (err) {
+      console.error('Error loading workflow items from state file:', err);
+    }
+    // Fallback/initialization
+    this.saveWorkflowItems(WORKFLOW_ITEMS);
+    return [...WORKFLOW_ITEMS];
+  }
+
+  private saveWorkflowItems(items: WorkflowItem[]): void {
+    try {
+      const dir = path.dirname(STATE_FILE);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(STATE_FILE, JSON.stringify(items, null, 2), 'utf8');
+    } catch (err) {
+      console.error('Error saving workflow items to state file:', err);
+    }
+  }
 
   // ─── MM ───
   async getPurchaseOrders(filter: POFilter): Promise<PurchaseOrder[]> {
@@ -117,7 +148,7 @@ export class MockERPAdapter extends ERPAdapterInterface {
 
   // ─── WF ───
   async getPendingApprovals(filter: WorkflowFilter): Promise<WorkflowItem[]> {
-    let results = this.workflowItems.filter(w => w.status === 'pending');
+    let results = this.loadWorkflowItems().filter(w => w.status === 'pending');
     if (filter.userId) results = results.filter(w => w.requestor === filter.userId);
     if (filter.module) results = results.filter(w => w.module === filter.module);
     if (filter.priority) results = results.filter(w => w.priority === filter.priority);
@@ -125,12 +156,15 @@ export class MockERPAdapter extends ERPAdapterInterface {
   }
 
   async approveWorkflowItem(itemId: string, action: 'approve' | 'reject', reason?: string) {
-    const item = this.workflowItems.find(w => w.itemId === itemId);
+    const items = this.loadWorkflowItems();
+    const item = items.find(w => w.itemId === itemId);
     if (!item) return { success: false, message: `Workflow item ${itemId} not found`, itemId };
     if (item.status !== 'pending') return { success: false, message: `Item ${itemId} is already ${item.status}`, itemId };
 
     item.status = action === 'approve' ? 'approved' : 'rejected';
     if (reason) item.notes = reason;
+
+    this.saveWorkflowItems(items);
 
     return {
       success: true,

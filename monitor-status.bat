@@ -22,7 +22,7 @@ powershell -Command "$r = $null; try { $r = Invoke-WebRequest -Uri 'http://local
 
 :: Check active connections on port 3000
 echo.
-powershell -Command "$conns = (netstat -an 2>$null | Select-String ':3000.*ESTABLISHED').Count; Write-Host '  [CONNECTIONS]   ' -NoNewline; Write-Host \"$conns active\" -ForegroundColor Cyan -NoNewline; Write-Host ' clients on port 3000'"
+powershell -Command "$conns = netstat -an 2>$null | Select-String ':3000\D'; $active = @($conns | Select-String 'ESTABLISHED').Count; $listening = @($conns | Select-String 'LISTENING').Count; $inactive = [math]::Max(0, @($conns).Count - $active - $listening); Write-Host '  [CONNECTIONS]   ' -NoNewline; Write-Host \"$active active, $inactive inactive\" -ForegroundColor Cyan -NoNewline; Write-Host ' clients on port 3000'"
 
 :: Check Node processes
 echo.

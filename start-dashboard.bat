@@ -1,6 +1,6 @@
 @echo off
 title SAP-MCP :: Dashboard Server
-color 0B
+color c
 echo.
 echo  ====================================================
 echo    SAP-MCP Intelligence Gateway
@@ -13,4 +13,3 @@ echo  ----------------------------------------------------
 echo.
 cd /d "D:\Projects\MCP System"
 npx tsx src/dashboard-server.ts
-pause

@@ -11,7 +11,7 @@ export interface AuditEntry {
   adapter: string;
 }
 
-const LOG_DIR = path.join(process.cwd(), 'audit-logs');
+const LOG_DIR = path.join(__dirname, '..', '..', 'audit-logs');
 
 /**
  * Append-only audit logger.
@@ -34,10 +34,37 @@ export class AuditLogger {
   }
 
   getRecentEntries(count = 50): AuditEntry[] {
-    return this.entries.slice(-count);
+    try {
+      if (!fs.existsSync(LOG_DIR)) {
+        return [];
+      }
+      const files = fs.readdirSync(LOG_DIR)
+        .filter(f => f.startsWith('audit-') && f.endsWith('.jsonl'))
+        .sort();
+
+      const allEntries: AuditEntry[] = [];
+      for (const file of files) {
+        const filePath = path.join(LOG_DIR, file);
+        const content = fs.readFileSync(filePath, 'utf8');
+        const lines = content.split('\n');
+        for (const line of lines) {
+          if (line.trim()) {
+            try {
+              allEntries.push(JSON.parse(line));
+            } catch (e) {
+              // Ignore malformed JSON lines
+            }
+          }
+        }
+      }
+      return allEntries.slice(-count);
+    } catch (err) {
+      console.error('Error reading recent audit log entries from disk:', err);
+      return this.entries.slice(-count);
+    }
   }
 
   getEntriesByTool(tool: string): AuditEntry[] {
-    return this.entries.filter(e => e.tool === tool);
+    return this.getRecentEntries(1000).filter(e => e.tool === tool);
   }
 }
