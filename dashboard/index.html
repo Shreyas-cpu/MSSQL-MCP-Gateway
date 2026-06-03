@@ -17,7 +17,12 @@
       SAP·MCP <span>Intelligence Gateway</span>
     </div>
     <div class="topbar-sep"></div>
-    <div class="topbar-adapter">MockERPAdapter</div>
+    <div class="topbar-adapter">
+      <select id="adapterSelect" onchange="changeAdapter()" style="background: transparent; color: inherit; border: none; font-family: inherit; font-size: inherit; cursor: pointer; outline: none;">
+        <option value="MockERPAdapter" style="color: black;">MockERPAdapter</option>
+        <option value="FakeStoreAdapter" style="color: black;">FakeStoreAdapter</option>
+      </select>
+    </div>
     <div class="topbar-right">
       <div class="topbar-time" id="clock"></div>
     </div>

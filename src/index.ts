@@ -1,14 +1,14 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { MockERPAdapter } from './adapters/mock-adapter.js';
+import { FakeStoreAdapter } from './adapters/fakestore-adapter.js';
 import { AuditLogger } from './middleware/audit-logger.js';
 
 // ═══════════════════════════════════════════════════════
 // SAP·MCP Intelligence Gateway — Server Entry Point
 // ═══════════════════════════════════════════════════════
 
-const adapter = new MockERPAdapter();
+const adapter = new FakeStoreAdapter();
 const audit = new AuditLogger();
 
 const server = new McpServer({

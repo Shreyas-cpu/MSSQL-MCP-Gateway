@@ -18,9 +18,19 @@ $$('.nav-item').forEach(item=>{
   });
 });
 
+// ─── Adapter Selection ───
+let currentAdapter = 'MockERPAdapter';
+function changeAdapter() {
+  currentAdapter = document.getElementById('adapterSelect').value;
+  const activePage = document.querySelector('.nav-item.active').dataset.page;
+  loadPage(activePage);
+}
+
 // ─── Fetch helper ───
 async function api(endpoint){
-  const res=await fetch(API+endpoint);
+  const res=await fetch(API+endpoint, {
+    headers: { 'x-adapter': currentAdapter }
+  });
   return res.json();
 }
 

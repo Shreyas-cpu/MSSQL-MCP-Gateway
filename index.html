@@ -1622,6 +1622,7 @@ body.presentation-mode .pres-dots { display: flex; }
   <button class="tab-btn" onclick="switchPage('p4',this)"><span class="tab-num">04</span> Implementation</button>
   <button class="tab-btn" onclick="switchPage('p5',this)"><span class="tab-num">05</span> Demo & Stack</button>
   <button class="tab-btn" onclick="switchPage('p6',this)"><span class="tab-num">06</span> Timeline & Value</button>
+  <button class="tab-btn" onclick="switchPage('p-fakestore',this)"><span class="tab-num">🛒</span> Fake Store Demo</button>
 </div>
 
 <div class="main-wrap">
@@ -2623,6 +2624,49 @@ body.presentation-mode .pres-dots { display: flex; }
   </section>
 
 </div><!-- /p6 -->
+
+<!-- ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ 
+     PAGE FAKESTORE — DEMO
+═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═  -->
+<div class="page" id="p-fakestore">
+  <section class="sec">
+    <div class="sec-eyebrow">Fake Store API integration</div>
+    <h2 class="sec-title">Live E-commerce Demo</h2>
+    <p class="sec-desc">This data is being fetched directly from <code>fakestoreapi.com</code> and mapped into our SAP models via the <code>FakeStoreAdapter</code>.</p>
+    
+    <div class="grid-3" style="margin-bottom: 30px;">
+      <button class="tab-btn active" style="justify-content: center; border: 1px solid var(--border); border-radius: 8px;" onclick="loadFakeStore('vendors')">Load Vendors (Users)</button>
+      <button class="tab-btn active" style="justify-content: center; border: 1px solid var(--border); border-radius: 8px;" onclick="loadFakeStore('inventory')">Load Inventory (Products)</button>
+      <button class="tab-btn active" style="justify-content: center; border: 1px solid var(--border); border-radius: 8px;" onclick="loadFakeStore('sales-orders')">Load Orders (Carts)</button>
+    </div>
+
+    <div class="terminal-wrap" style="margin-top: 0;">
+      <div class="terminal-bar">
+        <div class="tb-dot" style="background:#ff5f56; width:12px; height:12px; border-radius:50%;"></div>
+        <div class="tb-dot" style="background:#ffbd2e; width:12px; height:12px; border-radius:50%;"></div>
+        <div class="tb-dot" style="background:#27c93f; width:12px; height:12px; border-radius:50%;"></div>
+        <div class="tb-title" style="margin-left:8px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:rgba(255,255,255,0.5);">Fake Store Output</div>
+      </div>
+      <div class="terminal-body" id="fakestore-output" style="max-height: 500px; overflow-y: auto; padding: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #a8cc7c; background:#0a0a0a;">
+        Click a button above to fetch data...
+      </div>
+    </div>
+  </section>
+
+  <script>
+    async function loadFakeStore(type) {
+      const output = document.getElementById('fakestore-output');
+      output.innerHTML = 'Fetching from /api/fakestore/' + type + '...';
+      try {
+        const res = await fetch('/api/fakestore/' + type);
+        const data = await res.json();
+        output.innerHTML = '<pre style="margin:0; white-space:pre-wrap;">' + JSON.stringify(data, null, 2) + '</pre>';
+      } catch (err) {
+        output.innerHTML = '<span style="color: #ff5f56;">Error fetching data: ' + err.message + '</span>';
+      }
+    }
+  </script>
+</div><!-- /p-fakestore -->
 
 </div><!-- /main-wrap -->
 
