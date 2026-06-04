@@ -1,0 +1,8 @@
+materialId;plant;storageLocation;materialDescription;binLocation;quantity;unit;lastCountDate;status
+MAT-10001;1010;SL01;Industrial Ball Bearings SKF-6205;A-01-03;120;EA;2026-05-15;available
+MAT-10005;1010;SL02;Stainless Steel Sheets 304 (2mm);B-02-01;800;KG;2026-05-18;available
+MAT-10010;1020;SL03;Hydraulic Oil ISO VG 46;C-01-05;150;L;2026-05-10;available
+MAT-10015;1010;SL04;PLC Module Siemens S7-1200;D-03-02;3;EA;2026-04-28;reserved
+MAT-10025;1010;SL01;Pneumatic Cylinders FESTO DSBC-50;A-02-01;3;EA;2026-04-15;available
+MAT-10035;1020;SL03;HEPA Air Filters Grade H13;C-02-03;8;EA;2026-05-05;available
+MAT-10040;1010;SL02;Aluminium Extrusions 6063-T5;B-01-04;100;KG;2026-05-12;in-quality

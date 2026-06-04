@@ -1,5 +1,8 @@
 import { MockERPAdapter } from './mock-adapter.js';
-import { Vendor, Material, SalesOrder, SOFilter, InventoryFilter } from '../types/sap.js';
+import { 
+  Vendor, Material, SalesOrder, SOFilter, InventoryFilter,
+  PurchaseOrder, POFilter, DeliveryStatus
+} from '../types/sap.js';
 
 export class FakeStoreAdapter extends MockERPAdapter {
   readonly name: any = 'FakeStoreAdapter';
@@ -17,6 +20,26 @@ export class FakeStoreAdapter extends MockERPAdapter {
       console.error(`Error fetching from ${url}:`, error);
       return [];
     }
+  }
+
+  async updateStock(materialId: string, quantity: number): Promise<boolean> {
+    return true;
+  }
+
+  async getPurchaseOrders(filter: POFilter): Promise<PurchaseOrder[]> {
+    return [];
+  }
+
+  async createPurchaseOrder(po: Partial<PurchaseOrder>): Promise<PurchaseOrder> {
+    return { ...po, poNumber: '4500123123', status: 'pending' } as PurchaseOrder;
+  }
+
+  async checkDeliveryStatus(deliveryId?: string, salesOrderId?: string): Promise<DeliveryStatus[]> {
+    return [];
+  }
+
+  async updateDeliveryStatus(deliveryId: string, status: string): Promise<boolean> {
+    return true;
   }
 
   // Map FakeStore Users -> SAP Vendor

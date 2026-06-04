@@ -1,0 +1,9 @@
+itemId;type;description;documentNumber;module;requestor;amount;currency;priority;status;createdDate;dueDate;overdue;notes
+WF-0001;PO_APPROVAL;Purchase Order 4500001210 — TechSupply AG;4500001210;MM;SMUDHOLKAR;450000;INR;high;pending;2026-05-20;2026-05-25;true;
+WF-0002;PO_APPROVAL;Purchase Order 4500001215 — MetalWorks Ltd;4500001215;MM;RPATIL;280000;INR;medium;pending;2026-05-21;2026-05-26;false;
+WF-0003;PO_APPROVAL;Purchase Order 4500001218 — ChemCorp India;4500001218;MM;AKULKARNI;120000;INR;low;pending;2026-05-22;2026-05-27;false;
+WF-0004;BUDGET_RELEASE;Q2 Budget Release — Quality Control Lab CC-1020;BR-2026-Q2-1020;CO;VJOSHI;1350000;INR;high;pending;2026-05-23;2026-05-28;false;
+WF-0005;INVOICE_APPROVAL;Invoice Approval — ElectroParts GmbH EUR 7800;INV-2026-EP-001;FI;RPATIL;650000;INR;medium;pending;2026-05-22;2026-05-29;false;
+WF-0006;MATERIAL_RELEASE;Material Release — CNC Tool Holders for Plant 1010;MR-2026-1010-045;MM;SMUDHOLKAR;540000;INR;medium;pending;2026-05-25;2026-05-30;false;
+WF-0007;PO_APPROVAL;Purchase Order 4500001238 — ChemCorp India (Cutting Fluid);4500001238;MM;RPATIL;85000;INR;low;pending;2026-05-24;2026-05-29;false;
+WF-0008;LEAVE_REQUEST;Leave Request — AKULKARNI (3 days casual leave);LR-2026-AK-005;HR;AKULKARNI;0;INR;low;pending;2026-05-25;2026-05-28;false;

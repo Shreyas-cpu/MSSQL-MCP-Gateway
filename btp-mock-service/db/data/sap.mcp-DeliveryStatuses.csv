@@ -1,0 +1,4 @@
+deliveryNumber;salesOrder;customer;customerName;status;shippingDate;estimatedArrival;carrier;trackingNumber;items;weight;weightUnit
+DL-9001001;SO-8001005;C-2002;Mahindra & Mahindra;picked;2026-05-28;2026-06-02;Blue Dart Express;BD-2026-78901;30;450;KG
+DL-9001003;SO-8001008;C-2003;Bajaj Auto Ltd;delivered;2026-05-22;2026-05-25;DTDC Logistics;DTDC-2026-45678;200;1200;KG
+DL-9001005;SO-8001015;C-2005;Siemens India;delivered;2026-05-18;2026-05-20;FedEx India;FDX-2026-12345;15;600;KG

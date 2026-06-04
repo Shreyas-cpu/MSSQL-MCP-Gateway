@@ -1,0 +1,8 @@
+documentNumber;companyCode;fiscalYear;type;vendor;customer;name;amount;currency;postingDate;dueDate;overdueDays;paymentTerms;status
+FI-100001;1000;2026;AP;V-1001;;TechSupply AG;450000;INR;2026-05-20;2026-06-19;0;Net 30;open
+FI-100002;1000;2026;AP;V-1004;;ElectroParts GmbH;650000;INR;2026-05-18;2026-07-17;0;Net 60;open
+FI-100003;1000;2026;AP;V-1002;;MetalWorks Ltd;180000;INR;2026-04-15;2026-05-15;11;Net 30;open
+FI-100004;1000;2026;AR;;C-2003;Bajaj Auto Ltd;3600000;INR;2026-05-25;2026-06-24;0;Net 30;open
+FI-100005;1000;2026;AR;;C-2005;Siemens India;1200000;INR;2026-05-20;2026-06-04;0;Net 15;partially-cleared
+FI-100006;2000;2026;AP;V-1005;;PackagePro Solutions;75000;INR;2026-05-23;2026-06-07;0;Net 15;open
+FI-100007;1000;2026;AR;;C-2001;Tata Motors Ltd;1800000;INR;2026-04-20;2026-05-20;6;Net 30;open

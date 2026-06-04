@@ -57,7 +57,7 @@ export class MockERPAdapter extends ERPAdapterInterface {
     if (filter.status) results = results.filter(po => po.status === filter.status);
     if (filter.vendor) results = results.filter(po => po.vendor === filter.vendor);
     if (filter.material) results = results.filter(po => po.material === filter.material);
-    if (filter.plant) results = results.filter(po => po.plant === filter.plant);
+    if (filter.plant) results = results.filter(po => po.plant.toString() === filter.plant);
     if (filter.dateFrom) results = results.filter(po => po.createdDate >= filter.dateFrom!);
     if (filter.dateTo) results = results.filter(po => po.createdDate <= filter.dateTo!);
     if (filter.days) {
@@ -69,6 +69,13 @@ export class MockERPAdapter extends ERPAdapterInterface {
     return results;
   }
 
+  async createPurchaseOrder(po: Partial<PurchaseOrder>): Promise<PurchaseOrder> {
+    const poNumber = po.poNumber || `4500${Math.floor(100000 + Math.random() * 900000)}`;
+    const newPo = { ...po, poNumber, status: 'pending', createdDate: new Date().toISOString().split('T')[0] } as PurchaseOrder;
+    PURCHASE_ORDERS.push(newPo);
+    return newPo;
+  }
+
   async getVendorDetails(vendorId?: string, vendorName?: string): Promise<Vendor[]> {
     if (vendorId) return VENDORS.filter(v => v.vendorId === vendorId);
     if (vendorName) return VENDORS.filter(v => v.name.toLowerCase().includes(vendorName.toLowerCase()));
@@ -76,20 +83,33 @@ export class MockERPAdapter extends ERPAdapterInterface {
   }
 
   async queryInventory(filter: InventoryFilter): Promise<Material[]> {
-    let results = [...MATERIALS];
-    if (filter.materialId) results = results.filter(m => m.materialId === filter.materialId);
-    if (filter.plant) results = results.filter(m => m.plant === filter.plant);
-    if (filter.storageLocation) results = results.filter(m => m.storageLocation === filter.storageLocation);
-    if (filter.belowReorder) results = results.filter(m => m.currentStock < m.reorderPoint);
-    return results;
+    let result = MATERIALS;
+    if (filter.materialId) result = result.filter(m => m.materialId === filter.materialId);
+    if (filter.plant) result = result.filter(m => m.plant.toString() === filter.plant);
+    if (filter.belowReorder) result = result.filter(m => m.currentStock < m.reorderPoint);
+    return result;
+  }
+
+  async updateStock(materialId: string, quantity: number): Promise<boolean> {
+    const mat = MATERIALS.find(m => m.materialId === materialId);
+    if (!mat) return false;
+    mat.currentStock = quantity;
+    return true;
   }
 
   async getGoodsReceipts(poId?: string, plant?: string, dateFrom?: string): Promise<GoodsReceipt[]> {
     let results = [...GOODS_RECEIPTS];
-    if (poId) results = results.filter(gr => gr.poNumber === poId);
-    if (plant) results = results.filter(gr => gr.plant === plant);
-    if (dateFrom) results = results.filter(gr => gr.postingDate >= dateFrom);
+    if (poId) results = results.filter(g => g.poNumber === poId);
+    if (plant) results = results.filter(g => g.plant.toString() === plant);
+    if (dateFrom) results = results.filter(g => g.postingDate >= dateFrom);
     return results;
+  }
+
+  async postGoodsReceipt(receipt: Partial<GoodsReceipt>): Promise<GoodsReceipt> {
+    const grNumber = receipt.grNumber || `5000${Math.floor(100000 + Math.random() * 900000)}`;
+    const newGr = { ...receipt, grNumber, postingDate: new Date().toISOString().split('T')[0] } as GoodsReceipt;
+    GOODS_RECEIPTS.push(newGr);
+    return newGr;
   }
 
   // ─── SD ───
@@ -103,9 +123,17 @@ export class MockERPAdapter extends ERPAdapterInterface {
   }
 
   async checkDeliveryStatus(deliveryId?: string, salesOrderId?: string): Promise<DeliveryStatus[]> {
-    if (deliveryId) return DELIVERY_STATUS.filter(d => d.deliveryNumber === deliveryId);
-    if (salesOrderId) return DELIVERY_STATUS.filter(d => d.salesOrder === salesOrderId);
-    return DELIVERY_STATUS;
+    let results = [...DELIVERY_STATUS];
+    if (deliveryId) results = results.filter(d => d.deliveryNumber === deliveryId);
+    if (salesOrderId) results = results.filter(d => d.salesOrder === salesOrderId);
+    return results;
+  }
+
+  async updateDeliveryStatus(deliveryId: string, status: string): Promise<boolean> {
+    const d = DELIVERY_STATUS.find(x => x.deliveryNumber === deliveryId);
+    if (!d) return false;
+    d.status = status as any;
+    return true;
   }
 
   // ─── FI ───

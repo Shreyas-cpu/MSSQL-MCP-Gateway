@@ -1,0 +1,6 @@
+orderNumber;customer;customerName;material;materialDescription;quantity;unit;netValue;currency;status;orderDate;requestedDeliveryDate;plant;salesOrg;distributionChannel
+SO-8001001;C-2001;Tata Motors Ltd;FG-5001;Precision Gearbox Assembly PGA-200;50;EA;2500000;INR;open;2026-05-20;2026-06-15;1010;SO10;10
+SO-8001005;C-2002;Mahindra & Mahindra;FG-5002;Hydraulic Pump Unit HPU-150;30;EA;1800000;INR;in-process;2026-05-18;2026-06-05;1010;SO10;10
+SO-8001008;C-2003;Bajaj Auto Ltd;FG-5003;Drive Shaft Assembly DS-300;200;EA;3600000;INR;delivered;2026-05-10;2026-05-25;1020;SO10;20
+SO-8001012;C-2004;Bosch India;FG-5001;Precision Gearbox Assembly PGA-200;100;EA;5000000;INR;open;2026-05-22;2026-06-20;1010;SO10;10
+SO-8001015;C-2005;Siemens India;FG-5004;Control Panel Assembly CPA-500;15;EA;1200000;INR;billed;2026-05-05;2026-05-20;1010;SO10;10

@@ -1,0 +1,11 @@
+vendorId;name;country;city;paymentTerms;currency;contactPerson;email;phone;bankAccount;taxId;status;totalOpenOrders;ytdSpend;rating
+V-1001;TechSupply AG;DE;Munich;Net 30;EUR;Hans Mueller;hans@techsupply.de;+49-89-123456;DE89370400440532013000;DE123456789;active;3;2850000;A
+V-1002;MetalWorks Ltd;IN;Pune;Net 45;INR;Rajesh Sharma;rajesh@metalworks.in;+91-20-2567890;SBIN0001234;27AABCM1234F1Z5;active;2;1450000;B
+V-1003;ChemCorp India Pvt Ltd;IN;Mumbai;Net 30;INR;Priya Desai;priya@chemcorp.in;+91-22-4567890;HDFC0002345;27AABCC5678G1Z3;active;2;980000;A
+V-1004;ElectroParts GmbH;DE;Berlin;Net 60;EUR;Klaus Schmidt;klaus@electroparts.de;+49-30-987654;DE27100777770209299700;DE987654321;active;1;3200000;A
+V-1005;PackagePro Solutions;IN;Nashik;Net 15;INR;Amit Patil;amit@packagepro.in;+91-253-2345678;ICIC0003456;27AABCP9012H1Z1;active;1;320000;B
+V-1006;SafetyFirst Equipment;IN;Chennai;Net 30;INR;Karthik Rajan;karthik@safetyfirst.in;+91-44-5678901;AXIS0004567;33AABCS3456I1Z7;active;0;180000;B
+V-1007;CleanTech Systems;IN;Bangalore;Net 30;INR;Sanjay Kumar;sanjay@cleantech.in;+91-80-6789012;UTIB0005678;29AABCC7890J1Z5;active;1;520000;A
+V-1008;ToolMasters India;IN;Coimbatore;Net 45;INR;Vijay Subramanian;vijay@toolmasters.in;+91-422-7890123;SBIN0006789;33AABCT1234K1Z3;active;1;1100000;A
+V-1009;RubberTech Industries;IN;Ahmedabad;Net 30;INR;Mehul Patel;mehul@rubbertech.in;+91-79-8901234;BARB0007890;24AABCR5678L1Z1;active;1;210000;B
+V-1010;GlobalParts Corp;US;Detroit;Net 60;USD;Mike Johnson;mike@globalparts.com;+1-313-555-0100;US1234567890;US-EIN-12-3456789;blocked;0;0;D

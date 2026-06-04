@@ -1,5 +1,8 @@
 import { MockERPAdapter } from './mock-adapter.js';
-import { Vendor, Material, SalesOrder, SOFilter, InventoryFilter } from '../types/sap.js';
+import { 
+  Vendor, Material, SalesOrder, SOFilter, InventoryFilter,
+  PurchaseOrder, POFilter, GoodsReceipt
+} from '../types/sap.js';
 
 export class ODataAdapter extends MockERPAdapter {
   readonly name: any = 'ODataAdapter (Northwind)';
@@ -18,6 +21,18 @@ export class ODataAdapter extends MockERPAdapter {
       console.error(`Error fetching OData from ${url}:`, error);
       return [];
     }
+  }
+
+  async getPurchaseOrders(filter: POFilter): Promise<PurchaseOrder[]> {
+    return this.fetchOData('PurchaseOrders') as unknown as PurchaseOrder[];
+  }
+
+  async getGoodsReceipts(poId?: string, plant?: string, dateFrom?: string): Promise<GoodsReceipt[]> {
+    return this.fetchOData('GoodsReceipts') as unknown as GoodsReceipt[];
+  }
+
+  async createPurchaseOrder(po: Partial<PurchaseOrder>): Promise<PurchaseOrder> {
+    return {} as PurchaseOrder;
   }
 
   // Override getVendorDetails to map Northwind Suppliers -> SAP Vendor

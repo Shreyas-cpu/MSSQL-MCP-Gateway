@@ -1,0 +1,9 @@
+costCenter;period;fiscalYear;costElement;description;planned;actual;variance;overBudget
+CC-1010;05;2026;CE-410;Raw Materials;2000000;2150000;-150000;true
+CC-1010;05;2026;CE-420;Direct Labour;1500000;1380000;120000;false
+CC-1010;05;2026;CE-430;Machine Maintenance;800000;720000;80000;false
+CC-1010;05;2026;CE-440;Utilities & Energy;400000;350000;50000;false
+CC-1010;05;2026;CE-450;Consumables;300000;150000;150000;false
+CC-1020;05;2026;CE-510;Testing Equipment;400000;520000;-120000;true
+CC-1020;05;2026;CE-520;Lab Supplies;200000;230000;-30000;true
+CC-1020;05;2026;CE-530;Personnel;600000;600000;0;false

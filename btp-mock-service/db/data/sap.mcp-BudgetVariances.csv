@@ -1,0 +1,3 @@
+costCenter;period;fiscalYear;costCenterName;plannedAmount;actualAmount;variance;variancePercent;currency
+CC-1010;05;2026;Manufacturing - Plant 1010;5000000;4750000;250000;5.0;INR
+CC-1020;05;2026;Quality Control Lab;1200000;1350000;-150000;-12.5;INR

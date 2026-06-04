@@ -2,13 +2,19 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import { FakeStoreAdapter } from './adapters/fakestore-adapter.js';
+import { BtpAdapter } from './adapters/btp-adapter.js';
 import { AuditLogger } from './middleware/audit-logger.js';
+import dns from 'dns';
+
+// Force DNS lookup to prefer IPv4 (fixes many Windows native fetch failures)
+dns.setDefaultResultOrder('ipv4first');
 
 // ═══════════════════════════════════════════════════════
 // SAP·MCP Intelligence Gateway — Server Entry Point
 // ═══════════════════════════════════════════════════════
 
-const adapter = new FakeStoreAdapter();
+// Switch to our new BTP Adapter
+const adapter = new BtpAdapter();
 const audit = new AuditLogger();
 
 const server = new McpServer({
@@ -272,13 +278,115 @@ server.tool(
 );
 
 // ═══════════════════════════════════════════════════════
+// TOOL 13: update_inventory_stock (MM)
+// ═══════════════════════════════════════════════════════
+server.tool(
+  'update_inventory_stock',
+  'DIRECT MUTATION: Update the current stock level for a specific material in the backend system.',
+  {
+    material_id: z.string().describe('Material ID to update (e.g. MAT-10001)'),
+    quantity: z.number().describe('New current stock quantity'),
+  },
+  async (params) => {
+    const success = await withAudit('update_inventory_stock', params, () =>
+      adapter.updateStock(params.material_id, params.quantity)
+    );
+    if (success) {
+      return { content: [{ type: 'text' as const, text: JSON.stringify({ tool: 'update_inventory_stock', status: 'success', materialId: params.material_id, newQuantity: params.quantity }, null, 2) }] };
+    } else {
+      return { content: [{ type: 'text' as const, text: JSON.stringify({ tool: 'update_inventory_stock', status: 'error', message: 'Material not found or update failed.' }, null, 2) }] };
+    }
+  }
+);
+
+// ═══════════════════════════════════════════════════════
+// TOOL 14: create_purchase_order (MM)
+// ═══════════════════════════════════════════════════════
+server.tool(
+  'create_purchase_order',
+  'DIRECT MUTATION: Create a new Purchase Order in the backend system.',
+  {
+    vendor_id: z.string().describe('Vendor ID'),
+    material_id: z.string().describe('Material ID to order'),
+    quantity: z.number().describe('Quantity to order'),
+    plant: z.string().describe('Plant code for delivery'),
+    net_price: z.number().describe('Total net price'),
+  },
+  async (params) => {
+    const po = {
+      vendor: params.vendor_id,
+      vendorName: `Generated for ${params.vendor_id}`,
+      material: params.material_id,
+      materialDescription: 'Generated Item',
+      plant: params.plant,
+      quantity: params.quantity,
+      unit: 'EA',
+      netPrice: params.net_price,
+      currency: 'INR',
+      deliveryDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0], // +14 days
+      createdBy: 'MCP_AGENT',
+      companyCode: '1000'
+    };
+    const result = await withAudit('create_purchase_order', params, () => adapter.createPurchaseOrder(po));
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ tool: 'create_purchase_order', status: 'success', data: result }, null, 2) }] };
+  }
+);
+
+// ═══════════════════════════════════════════════════════
+// TOOL 15: update_delivery_status (SD)
+// ═══════════════════════════════════════════════════════
+server.tool(
+  'update_delivery_status',
+  'DIRECT MUTATION: Update the status of a delivery.',
+  {
+    delivery_id: z.string().describe('Delivery ID (e.g. DEL-8001)'),
+    status: z.enum(['pending', 'picked', 'shipped', 'delivered']).describe('New delivery status'),
+  },
+  async (params) => {
+    const success = await withAudit('update_delivery_status', params, () => adapter.updateDeliveryStatus(params.delivery_id, params.status));
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ tool: 'update_delivery_status', status: success ? 'success' : 'error' }, null, 2) }] };
+  }
+);
+
+// ═══════════════════════════════════════════════════════
+// TOOL 16: post_goods_receipt (MM)
+// ═══════════════════════════════════════════════════════
+server.tool(
+  'post_goods_receipt',
+  'DIRECT MUTATION: Post a goods receipt against a Purchase Order.',
+  {
+    po_number: z.string().describe('Purchase Order Number'),
+    material_id: z.string().describe('Material ID received'),
+    quantity: z.number().describe('Quantity received'),
+    plant: z.string().describe('Plant code'),
+    movement_type: z.number().default(101).describe('SAP Movement Type (default 101)'),
+  },
+  async (params) => {
+    const gr = {
+      poNumber: params.po_number,
+      materialId: params.material_id,
+      quantity: params.quantity,
+      unit: 'EA',
+      plant: params.plant,
+      storageLocation: 'SL01',
+      movementType: params.movement_type.toString(),
+      referenceDoc: `DEL-${Math.floor(1000 + Math.random() * 9000)}`
+    };
+    const result = await withAudit('post_goods_receipt', params, () => adapter.postGoodsReceipt(gr));
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ tool: 'post_goods_receipt', status: 'success', data: result }, null, 2) }] };
+  }
+);
+
+// ═══════════════════════════════════════════════════════
 // SERVER STARTUP
 // ═══════════════════════════════════════════════════════
 async function main() {
   const transport = new StdioServerTransport();
   console.error('SAP·MCP Intelligence Gateway v1.0.0');
   console.error(`Adapter: ${adapter.name}`);
-  console.error('12 tools registered · stdio transport');
+  console.error(`Node version: ${process.version}`);
+  console.error(`Node path: ${process.execPath}`);
+  console.error('16 tools registered · stdio transport');
   console.error('Waiting for MCP client connection...');
   await server.connect(transport);
 }

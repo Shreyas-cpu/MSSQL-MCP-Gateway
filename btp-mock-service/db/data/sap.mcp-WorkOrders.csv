@@ -1,0 +1,6 @@
+orderNumber;description;equipmentId;equipmentName;plant;workCenter;priority;status;type;createdDate;scheduledDate;completedDate;estimatedHours;actualHours;assignedTo
+WO-7001;Annual PM - CNC Machine VMC-850;EQ-2001;CNC VMC-850 Vertical Machining Center;1010;WC-MAINT;high;open;preventive;2026-05-20;2026-05-28;;16;;RPATIL
+WO-7002;Breakdown - Hydraulic Press HP-200 Oil Leak;EQ-2002;Hydraulic Press HP-200;1010;WC-MAINT;high;in-progress;corrective;2026-05-24;2026-05-25;;8;4;AKULKARNI
+WO-7003;Quarterly Inspection - Conveyor Belt System;EQ-2003;Conveyor Belt Line CB-100;1020;WC-MAINT;medium;open;inspection;2026-05-22;2026-06-01;;4;;VJOSHI
+WO-7004;Replace HEPA Filters - Clean Room AHU;EQ-2004;Air Handling Unit AHU-CR01;1020;WC-HVAC;medium;open;preventive;2026-05-23;2026-06-05;;6;;RPATIL
+WO-7005;Motor Replacement - Compressor Unit;EQ-2005;Screw Compressor SC-500;1010;WC-MAINT;low;completed;corrective;2026-05-10;2026-05-15;2026-05-14;12;10;AKULKARNI

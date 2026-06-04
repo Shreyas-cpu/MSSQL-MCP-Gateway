@@ -1,0 +1,5 @@
+grNumber;poNumber;material;materialDescription;plant;quantity;unit;postingDate;vendor;vendorName;movementType;documentDate
+GR-50001;4500001228;MAT-10030;Safety Helmets ISI Certified;1010;200;EA;2026-05-20;V-1006;SafetyFirst Equipment;101;2026-05-20
+GR-50002;4500001220;MAT-10015;PLC Module Siemens S7-1200;1010;5;EA;2026-05-22;V-1004;ElectroParts GmbH;101;2026-05-22
+GR-50003;4500001230;MAT-10035;HEPA Air Filters Grade H13;1020;30;EA;2026-05-25;V-1007;CleanTech Systems;101;2026-05-25
+GR-50004;4500001240;MAT-10055;O-Ring Seal Kit Viton (Assorted);1010;100;SET;2026-05-24;V-1009;RubberTech Industries;101;2026-05-24
