@@ -1,17 +1,33 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { EventEmitter } from 'events';
 
 export interface AuditEntry {
   timestamp: string;
   tool: string;
   params: Record<string, unknown>;
   userId: string;
-  result: 'success' | 'error';
+  result: 'success' | 'error' | 'blocked' | string;
   durationMs: number;
   adapter: string;
 }
 
 const LOG_DIR = path.join(__dirname, '..', '..', 'audit-logs');
+
+/** Global audit event emitter for SSE streaming and live monitors */
+export const auditEmitter = new EventEmitter();
+auditEmitter.setMaxListeners(100);
+
+/**
+ * Register a listener for real-time audit events.
+ * Returns an unregister function.
+ */
+export function onAudit(listener: (entry: AuditEntry) => void): () => void {
+  auditEmitter.on('audit', listener);
+  return () => {
+    auditEmitter.off('audit', listener);
+  };
+}
 
 /**
  * Append-only audit logger.
@@ -30,7 +46,16 @@ export class AuditLogger {
     this.entries.push(entry);
     const date = new Date().toISOString().split('T')[0];
     const file = path.join(LOG_DIR, `audit-${date}.jsonl`);
-    fs.appendFileSync(file, JSON.stringify(entry) + '\n');
+    try {
+      fs.appendFileSync(file, JSON.stringify(entry) + '\n');
+    } catch (err) {
+      console.error('[AuditLogger] Failed to write to audit log file:', err);
+    }
+    auditEmitter.emit('audit', entry);
+  }
+
+  onAudit(listener: (entry: AuditEntry) => void): () => void {
+    return onAudit(listener);
   }
 
   getRecentEntries(count = 50): AuditEntry[] {

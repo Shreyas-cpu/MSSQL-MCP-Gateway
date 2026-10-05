@@ -1,7 +1,7 @@
 {
-  "name": "sap-mcp-gateway",
+  "name": "mssql-mcp-gateway",
   "version": "1.0.0",
-  "description": "SAP Intelligence Gateway — MCP server bridging AI models into SAP ERP workflows",
+  "description": "MSSQL Database Gateway — Model Context Protocol server and real-time live monitor for Microsoft SQL Server",
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {
@@ -23,8 +23,10 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
+    "@types/mssql": "^12.3.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "mssql": "^12.7.2",
     "zod": "^3.25.20"
   },
   "devDependencies": {

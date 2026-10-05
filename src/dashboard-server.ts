@@ -1,113 +1,219 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import { MockERPAdapter } from './adapters/mock-adapter.js';
-import { FakeStoreAdapter } from './adapters/fakestore-adapter.js';
-import { AuditLogger } from './middleware/audit-logger.js';
+import dns from 'dns';
+import { AuditLogger, onAudit, AuditEntry } from './middleware/audit-logger.js';
+import { mssqlAdapter } from './adapters/mssql-adapter.js';
+
+// Force DNS resolution to prefer IPv4 over IPv6
+dns.setDefaultResultOrder('ipv4first');
 
 const app = express();
-const adapter = new MockERPAdapter();
-const fakeAdapter = new FakeStoreAdapter();
 const audit = new AuditLogger();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+
+// Enforce strict read-only safety protocol on MSSQL adapter
+mssqlAdapter.setReadOnlyMode(true);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'dashboard')));
 
-function getAdapter(req: express.Request) {
-  return req.headers['x-adapter'] === 'FakeStoreAdapter' ? fakeAdapter : adapter;
-}
+// ─── Real-Time Server-Sent Events (SSE) Stream ───
+const sseClients = new Set<express.Response>();
 
-// ─── API Routes (mirror MCP tools as REST) ───
-app.get('/api/purchase-orders', async (req, res) => {
-  const data = await getAdapter(req).getPurchaseOrders({
-    status: req.query.status as string, vendor: req.query.vendor as string,
-    plant: req.query.plant as string, days: req.query.days ? parseInt(req.query.days as string) : undefined,
+// Broadcast every new audit entry to all connected SSE clients
+onAudit((entry: AuditEntry) => {
+  const payload = `data: ${JSON.stringify(entry)}\n\n`;
+  for (const client of sseClients) {
+    try {
+      client.write(payload);
+    } catch (err) {
+      // Failed client will be cleaned up on close
+    }
+  }
+});
+
+app.get('/api/live-stream', (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    'Connection': 'keep-alive',
+    'X-Accel-Buffering': 'no',
   });
-  res.json({ tool: 'get_purchase_orders', count: data.length, data });
-});
 
-app.get('/api/inventory', async (req, res) => {
-  const data = await getAdapter(req).queryInventory({
-    materialId: req.query.material_id as string, plant: req.query.plant as string,
-    belowReorder: req.query.below_reorder === 'true',
+  // Initial connection handshake
+  res.write(`data: ${JSON.stringify({
+    type: 'connected',
+    message: 'Connected to MSSQL MCP Live Stream',
+    timestamp: new Date().toISOString(),
+    readOnly: mssqlAdapter.isReadOnly(),
+  })}\n\n`);
+
+  sseClients.add(res);
+
+  // Send heartbeat comment every 15s to keep connection alive
+  const heartbeatTimer = setInterval(() => {
+    try {
+      res.write(': heartbeat\n\n');
+    } catch {
+      clearInterval(heartbeatTimer);
+    }
+  }, 15000);
+
+  req.on('close', () => {
+    clearInterval(heartbeatTimer);
+    sseClients.delete(res);
   });
-  res.json({ tool: 'query_inventory', count: data.length, data });
 });
 
-app.get('/api/vendors', async (req, res) => {
-  const data = await getAdapter(req).getVendorDetails(req.query.vendor_id as string, req.query.vendor_name as string);
-  res.json({ tool: 'get_vendor_details', count: data.length, data });
+// ─── MSSQL Database Helper Endpoints ───
+
+// Connection status & safety lock
+app.get('/api/mssql/status', async (_req, res) => {
+  try {
+    const isConn = mssqlAdapter.isConnected();
+    res.json({
+      connected: isConn,
+      readOnly: mssqlAdapter.isReadOnly(),
+      database: 'TG_2024',
+      server: 'hcp.developeradda.com:4431',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || String(err) });
+  }
 });
 
-app.get('/api/sales-orders', async (req, res) => {
-  const data = await getAdapter(req).getSalesOrders({
-    customer: req.query.customer as string, status: req.query.status as string,
-  });
-  res.json({ tool: 'get_sales_orders', count: data.length, data });
+// List all 187 tables in TG_2024
+app.get('/api/mssql/tables', async (req, res) => {
+  try {
+    const db = req.query.database as string | undefined;
+    const tables = await mssqlAdapter.listTables(db);
+    res.json({ success: true, database: db || 'TG_2024', count: tables.length, tables });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || String(err) });
+  }
 });
 
-app.get('/api/delivery-status', async (req, res) => {
-  const data = await getAdapter(req).checkDeliveryStatus(req.query.delivery_id as string, req.query.sales_order_id as string);
-  res.json({ tool: 'check_delivery_status', count: data.length, data });
+// Inspect table schema
+app.get('/api/mssql/table-schema', async (req, res) => {
+  try {
+    const table = req.query.table as string;
+    const schema = req.query.schema as string | undefined;
+    const db = req.query.database as string | undefined;
+    if (!table) {
+      return res.status(400).json({ success: false, error: 'Table parameter required' });
+    }
+    const columns = await mssqlAdapter.describeTable(table, schema, db);
+    res.json({ success: true, table, schema: schema || 'dbo', count: columns.length, columns });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || String(err) });
+  }
 });
 
-app.get('/api/open-items', async (req, res) => {
-  const data = await getAdapter(req).getOpenItems({
-    companyCode: req.query.company_code as string, type: req.query.type as 'AP' | 'AR',
-    overdue: req.query.overdue === 'true',
-  });
-  res.json({ tool: 'get_open_items', count: data.length, data });
+// Preview top rows from a table safely
+app.get('/api/mssql/table-data', async (req, res) => {
+  const start = Date.now();
+  try {
+    const table = req.query.table as string;
+    const schema = (req.query.schema as string) || 'dbo';
+    const limit = Math.min(Math.max(parseInt(req.query.limit as string) || 20, 1), 100);
+    const db = (req.query.database as string) || 'TG_2024';
+
+    if (!table) {
+      return res.status(400).json({ success: false, error: 'Table parameter required' });
+    }
+
+    // Sanitize identifier to prevent injection
+    const cleanSchema = schema.replace(/[^a-zA-Z0-9_]/g, '');
+    const cleanTable = table.replace(/[^a-zA-Z0-9_]/g, '');
+    const safeSql = `SELECT TOP (${limit}) * FROM [${cleanSchema}].[${cleanTable}]`;
+
+    const rows = await mssqlAdapter.query(safeSql, undefined, db);
+
+    audit.log({
+      timestamp: new Date().toISOString(),
+      tool: 'mssql_read_query',
+      params: { table: `${cleanSchema}.${cleanTable}`, limit, query: safeSql, database: db },
+      userId: 'dashboard_viewer',
+      result: 'success',
+      durationMs: Date.now() - start,
+      adapter: 'mssql',
+    });
+
+    res.json({
+      success: true,
+      table: `${cleanSchema}.${cleanTable}`,
+      database: db,
+      limit,
+      count: rows.length,
+      rows,
+    });
+  } catch (err: any) {
+    audit.log({
+      timestamp: new Date().toISOString(),
+      tool: 'mssql_read_query',
+      params: { table: req.query.table, error: err?.message },
+      userId: 'dashboard_viewer',
+      result: 'error',
+      durationMs: Date.now() - start,
+      adapter: 'mssql',
+    });
+    res.status(500).json({ success: false, error: err?.message || String(err) });
+  }
 });
 
-app.get('/api/budget-variance', async (req, res) => {
-  const data = await getAdapter(req).queryBudgetVariance({
-    costCenter: req.query.cost_center as string, period: req.query.period as string,
-  });
-  res.json({ tool: 'query_budget_variance', count: data.length, data });
+// Ad-hoc read-only query runner with safety lock check
+app.post('/api/mssql/query', async (req, res) => {
+  const start = Date.now();
+  const { query, database } = req.body;
+
+  if (!query || typeof query !== 'string') {
+    return res.status(400).json({ success: false, error: 'SQL query string required' });
+  }
+
+  try {
+    const rows = await mssqlAdapter.query(query, undefined, database);
+    audit.log({
+      timestamp: new Date().toISOString(),
+      tool: 'mssql_read_query',
+      params: { query, database: database || 'TG_2024' },
+      userId: 'dashboard_viewer',
+      result: 'success',
+      durationMs: Date.now() - start,
+      adapter: 'mssql',
+    });
+    res.json({ success: true, count: rows.length, rows });
+  } catch (err: any) {
+    const isSafetyLock = err?.message?.includes('SAFETY_LOCK');
+    audit.log({
+      timestamp: new Date().toISOString(),
+      tool: 'mssql_execute_statement',
+      params: { query, database: database || 'TG_2024' },
+      userId: 'dashboard_viewer',
+      result: 'error',
+      durationMs: Date.now() - start,
+      adapter: 'mssql',
+    });
+    res.status(isSafetyLock ? 403 : 500).json({
+      success: false,
+      error: err?.message || String(err),
+      safetyLocked: isSafetyLock,
+    });
+  }
 });
 
-app.get('/api/work-orders', async (req, res) => {
-  const data = await getAdapter(req).getWorkOrders({
-    status: req.query.status as string, plant: req.query.plant as string,
-    priority: req.query.priority as string,
-  });
-  res.json({ tool: 'get_work_orders', count: data.length, data });
-});
-
-app.get('/api/pending-approvals', async (req, res) => {
-  const data = await getAdapter(req).getPendingApprovals({
-    module: req.query.module as string, priority: req.query.priority as string,
-  });
-  res.json({ tool: 'get_pending_approvals', count: data.length, data });
-});
-
-app.post('/api/approve', async (req, res) => {
-  const { item_id, action, reason } = req.body;
-  const activeAdapter = getAdapter(req);
-  const result = await activeAdapter.approveWorkflowItem(item_id, action, reason);
-  audit.log({ timestamp: new Date().toISOString(), tool: 'approve_workflow_item', params: req.body, userId: 'dashboard_user', result: result.success ? 'success' : 'error', durationMs: 0, adapter: activeAdapter.name });
-  res.json(result);
-});
-
-app.get('/api/report', async (req, res) => {
-  const data = await getAdapter(req).generateBusinessReport(
-    req.query.type as string || 'procurement_spend',
-    req.query.period as string || 'May 2026',
-    req.query.entity as string,
-  );
-  res.json(data);
-});
-
+// ─── Audit Log Endpoint ───
 app.get('/api/audit-log', (_req, res) => {
   res.json(audit.getRecentEntries());
 });
 
 app.listen(PORT, () => {
-  console.log(`\n  SAP·MCP Dashboard Server`);
-  console.log(`  ─────────────────────────`);
-  console.log(`  Local:   http://localhost:${PORT}`);
-  console.log(`  Adapter: ${adapter.name}`);
-  console.log(`  API:     12 endpoints ready\n`);
+  console.log(`\n  MSSQL MCP Gateway & Live Dashboard Server`);
+  console.log(`  ──────────────────────────────────────────`);
+  console.log(`  Local URL:  http://localhost:${PORT}`);
+  console.log(`  Database:   TG_2024 @ hcp.developeradda.com:4431`);
+  console.log(`  Safety:     READ-ONLY LOCK ACTIVE`);
+  console.log(`  Live Stream: http://localhost:${PORT}/api/live-stream (SSE ready)\n`);
 });

@@ -11,8 +11,8 @@ import {
 export class BtpAdapter extends ERPAdapterInterface {
   readonly name = 'BtpAdapter (SAP BTP OData Mock)';
   
-  // Pointing to our newly deployed live BTP mock server in the cloud!
-  private baseUrl = 'https://btp-mock-service-appreciative-meerkat-eb.cfapps.ap21.hana.ondemand.com/odata/v4/catalog';
+  // Pointing to our local BTP mock server!
+  private baseUrl = process.env.BTP_URL || 'http://localhost:4004/odata/v4/catalog';
 
   private async fetchOData<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${this.baseUrl}/${endpoint}`;

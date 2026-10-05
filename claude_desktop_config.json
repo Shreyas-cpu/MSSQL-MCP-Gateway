@@ -1,8 +1,18 @@
 {
   "mcpServers": {
-    "sap-mcp-gateway": {
+    "mssql-database-gateway": {
       "command": "node",
-      "args": ["D:\\Projects\\MCP System\\dist\\index.js"]
+      "args": [
+        "/run/media/promethious/Personal/Projects/MCP System/dist/index.js"
+      ],
+      "env": {
+        "MSSQL_HOST": "hcp.developeradda.com",
+        "MSSQL_PORT": "4431",
+        "MSSQL_USER": "sa",
+        "MSSQL_PASSWORD": "dev@1979",
+        "MSSQL_DATABASE": "TG_2024",
+        "MSSQL_READ_ONLY": "true"
+      }
     }
   }
 }
