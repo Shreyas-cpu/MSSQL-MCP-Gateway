@@ -63,6 +63,51 @@ Cursor is pre-configured via `~/.cursor/mcp.json`. When Cursor opens:
 
 ---
 
+## 🤖 Codex CLI Integration (`codex-cli`)
+
+The MCP Gateway is 100% standard Model Context Protocol, meaning it can be used identically from **OpenAI Codex CLI** (`codex`):
+
+### 1. Codex CLI Configuration (`~/.codex/config.toml`)
+Codex automatically loads the gateway from `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.mssql_gateway]
+command = "/usr/bin/node"
+args = ["/run/media/promethious/Personal/Projects/MCP System/dist/index.js"]
+startup_timeout_sec = 60.0
+
+[mcp_servers.mssql_gateway.env]
+MSSQL_DATABASE = "TG_2024"
+MSSQL_HOST = "hcp.developeradda.com"
+MSSQL_PASSWORD = "dev@1979"
+MSSQL_PORT = "4431"
+MSSQL_READ_ONLY = "true"
+MSSQL_USER = "sa"
+```
+
+### 2. Verify Codex MCP Registration
+```bash
+codex mcp list
+codex mcp get mssql_gateway
+```
+
+### 3. Run Queries via Codex CLI
+
+**Interactive Session:**
+```bash
+codex
+# In the prompt: "List the top 5 tables in TG_2024 and describe ActivityOwner_SOB"
+```
+
+**Non-Interactive / Headless Script:**
+```bash
+codex exec --dangerously-bypass-approvals-and-sandbox "Use mssql_gateway tool mssql_list_tables to list tables in TG_2024. Return the first 5 table names."
+```
+
+*(All queries appear on the Live Dashboard at `http://localhost:3000` just like Cursor!)*
+
+---
+
 ## 🧪 Automated Verification Suites
 
 You can re-run all automated test suites at any time:
